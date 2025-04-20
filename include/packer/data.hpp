@@ -25,6 +25,5 @@ struct Rect{
 };
 
 
-
 }
 #endif
