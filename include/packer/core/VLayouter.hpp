@@ -2,8 +2,8 @@
 #define PACKER_VLAYOUTER_HPP
 
 #include "packer/core/VRecorder.hpp"
-namespace packer{
-
+#include "packer/packer.hpp"
+PACKER_BEGIN
 
 /* Layouter对每个单独的png文件计算它们在最终合并的png文件中的布局位置 */
 class VLayouter{
@@ -14,6 +14,5 @@ class VLayouter{
     virtual ~VLayouter() =0;
 };
 
-
-}
+PACKER_END
 #endif

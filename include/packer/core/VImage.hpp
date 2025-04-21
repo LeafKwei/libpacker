@@ -2,8 +2,8 @@
 #define PACKER_VIMAGE_HPP
 
 #include "packer/data.hpp"
-namespace packer{
-
+#include "packer/packer.hpp"
+PACKER_BEGIN
 
 /* 图片像素数据的接口，每一个RGBA结构体对应一个像素 */
 class VImage{
@@ -17,6 +17,5 @@ public:
     virtual ~VImage() =0;
 };
 
-
-}
+PACKER_END
 #endif

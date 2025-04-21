@@ -2,15 +2,8 @@
 #define PACKER_DATA_HPP
 
 #include <cstdint>
-namespace packer{
-
-
-struct RGBA{
-    uint8_t r;
-    uint8_t g;
-    uint8_t b;
-    uint8_t a;
-};
+#include "packer/packer.hpp"
+PACKER_BEGIN
 
 struct Point{
     int x;
@@ -24,6 +17,14 @@ struct Rect{
     int y2;
 };
 
+struct RGBA_Struct{
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
+    uint8_t a;
+};
 
-}
+typedef RGBA_Struct RGBA;
+
+PACKER_END
 #endif
