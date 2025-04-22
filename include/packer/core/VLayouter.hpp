@@ -7,6 +7,7 @@ PACKER_BEGIN
 
 /* Layouter对每个单独的png文件计算它们在最终合并的png文件中的布局位置 */
 class VLayouter{
+public:
     virtual void laydown(int width, int height) =0;
     virtual int finalWidth() const =0;
     virtual int finalHeight() const =0;
