@@ -12,11 +12,21 @@ struct Point{
 };
 
 struct Rect{
-    int x1;
-    int y1;
-    int x2;
-    int y2;
-    Rect() : x1(0), y1(0), x2(0), y2(0) {}
+    int x;
+    int y;
+    int width;
+    int height;
+    Rect() : x(0), y(0), width(0), height(0) {}
+};
+
+struct Cell{
+    int x;
+    int y;
+    int id;
+    int width;
+    int height;
+
+    Cell() : x(0), y(0), id(0), width(0), height(0) {}
 };
 
 struct RGBA_Struct{

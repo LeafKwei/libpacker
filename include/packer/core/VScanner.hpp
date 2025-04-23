@@ -9,7 +9,7 @@ PACKER_BEGIN
 /* Scanner可以对一个VImage对象执行扫描，并返回Rect指出VImage中非透明像素的范围 */
 class VScanner{
 public:
-    virtual Rect scan(const VImage &img) const =0;
+    virtual bool scan(const VImage &img, Rect &result) const =0;
     virtual ~VScanner() =0;
 };
 

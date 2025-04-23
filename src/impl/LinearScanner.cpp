@@ -1,5 +1,4 @@
 #include "packer/impl/LinearScanner.hpp"
-
 PACKER_BEGIN
 
 LinearScanner::LinearScanner(){
@@ -10,11 +9,10 @@ LinearScanner::~LinearScanner(){
 
 }
 
-Rect LinearScanner::scan(const VImage &img) const{
-    Rect result;
+bool LinearScanner::scan(const VImage &img, Rect &result) const{
 
     /* 从上到下找到首个非透明像素的坐标 */
-    int x1, y1;
+    int x1 = -1, y1 = -1;
     for(int y = 0; y < img.height(); y++){
         for(int x = 0; x < img.width(); x++){
             if(img.access(x, y).a != 0){
@@ -22,6 +20,11 @@ Rect LinearScanner::scan(const VImage &img) const{
                 y1 = y;
             }
         }
+    }
+
+    /* 如果没有找到任何非透明像素，则说明此图片无有效内容 */
+    if(x1 == -1 || y1 == -1){
+        return false;
     }
 
     /* 从下到上找到首个非透明像素的坐标 */
@@ -57,13 +60,13 @@ Rect LinearScanner::scan(const VImage &img) const{
         }
     }
 
-    /* 将得到的四个坐标综合计算出一个左上角和右上角坐标，这两个坐标划出了一个矩形范围，所有的可见像素都被包含在其中 */
-    result.x1 = x3;
-    result.y1 = y1;
-    result.x2 = x4;
-    result.y2 = y2;
+    /* 将得到的四个坐标综合计算出一个矩形的左上角坐标以及宽度和高度，这个矩形范围内包含了所有可见像素 */
+    result.x = x3;
+    result.y = y1;
+    result.width = x4 - x3 + 1;
+    result.height = y2 - y1 + 1;
 
-    return result;
+    return true;
 }
 
 PACKER_END

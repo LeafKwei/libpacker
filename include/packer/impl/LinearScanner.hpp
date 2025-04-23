@@ -10,7 +10,7 @@ class LinearScanner : public VScanner{
 public:
     LinearScanner();
     virtual ~LinearScanner();
-    virtual Rect scan(const VImage &img) const;
+    virtual bool scan(const VImage &img, Rect &result) const;
 
 private:
 

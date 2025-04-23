@@ -7,11 +7,10 @@ PACKER_BEGIN
 
 class GapImage : public VImage{
 public:
-    GapImage();
-    virtual ~GapImage();
+
 
 protected:
-    
+
 
 private:
     int m_width;
