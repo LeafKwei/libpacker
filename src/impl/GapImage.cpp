@@ -33,15 +33,25 @@ int GapImage::height() const{
 }
 
 RGBA GapImage::access(int x, int y) const{
-    
+    if(x < 0 || y < 0 || x >= m_width || y >= m_height) throw logic_error("Invalid postion.");
+    return m_data[y * m_width + x];
 }
 
 void GapImage::place(int x, int y, const RGBA &rgb){
-
+    if(x < 0 || y < 0 || x >= m_width || y >= m_height) throw logic_error("Invalid postion.");
+    m_data[y * m_width + x] = rgb;
 }
 
 void GapImage::placeRect(int x, int y, const VImage &src, const Rect &rect){
-
+    if(x < 0 || y < 0 || x >= m_width || y >= m_height) throw logic_error("Invalid postion.");
+    if(x + rect.width > m_width || y + rect.height > m_height) throw logic_error("Out of range.");
+    
+    for(int vy = 0; vy < rect.height; vy++){
+        for(int vx = 0; vx < rect.width; vx++){
+            int pos = ((y + vy) * m_width) + (x + vx);
+            m_data[pos] = src.access(rect.x + vx, rect.y + vy);
+        }
+    }
 }
 
 const RGBA* GapImage::accessAll(){
