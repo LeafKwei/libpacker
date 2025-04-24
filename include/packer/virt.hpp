@@ -3,7 +3,6 @@
 
 #include "packer/core/VImage.hpp"
 #include "packer/core/VLayouter.hpp"
-#include "packer/core/VRecorder.hpp"
 #include "packer/core/VScanner.hpp"
 
 #endif

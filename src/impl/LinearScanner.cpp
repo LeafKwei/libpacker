@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include "packer/impl/LinearScanner.hpp"
 PACKER_BEGIN
 
@@ -9,7 +10,8 @@ LinearScanner::~LinearScanner(){
 
 }
 
-bool LinearScanner::scan(const VImage &img, Rect &result) const{
+bool LinearScanner::scan(int id, const VImage &img) {
+    Rect result;
 
     /* 从上到下找到首个非透明像素的坐标 */
     int x1 = -1, y1 = -1;
@@ -60,13 +62,20 @@ bool LinearScanner::scan(const VImage &img, Rect &result) const{
         }
     }
 
-    /* 将得到的四个坐标综合计算出一个矩形的左上角坐标以及宽度和高度，这个矩形范围内包含了所有可见像素 */
+    /* 将得到的四个坐标综合计算出一个矩形的左上角坐标以及宽度和高度(x3,y1)(x4,y2)，这个矩形范围内包含了所有可见像素 */
     result.x = x3;
     result.y = y1;
     result.width = x4 - x3 + 1;
     result.height = y2 - y1 + 1;
 
+    m_ranges.insert(std::make_pair(id, result));
     return true;
+}
+
+Rect LinearScanner::rangeOf(int id) const{
+    auto ite = m_ranges.find(id);
+    if(ite == m_ranges.end()) throw std::logic_error("Invalid ID.");
+    return ite -> second;
 }
 
 PACKER_END

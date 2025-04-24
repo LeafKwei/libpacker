@@ -19,16 +19,6 @@ struct Rect{
     Rect() : x(0), y(0), width(0), height(0) {}
 };
 
-struct Cell{
-    int x;
-    int y;
-    int id;
-    int width;
-    int height;
-
-    Cell() : x(0), y(0), id(0), width(0), height(0) {}
-};
-
 struct RGBA_Struct{
     uint8_t r;
     uint8_t g;
