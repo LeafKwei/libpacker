@@ -1,5 +1,7 @@
 #include <cstdlib>
-#include "stdexcept"
+#include <stdexcept>
+#include "iostream"
+#include "packer/impl/GapImage.hpp"
 #include "packer/impl/GapImage.hpp"
 using std::logic_error;
 using std::runtime_error;
@@ -19,10 +21,10 @@ GapImage::~GapImage(){
     free(m_data);
 }
 
-void GapImage::readRawImage(){}
-int GapImage::customedHeight() const { return 0; }
-int GapImage::customedWidth() const { return 0; }
-void GapImage::fillData(int x, int y, RGBA &rgb){}
+void GapImage::readRawImage() { throw logic_error("Operation unsupported");  }
+int GapImage::customedHeight() const { throw logic_error("Operation unsupported.");  }
+int GapImage::customedWidth() const { throw logic_error("Operation unsupported.");  }
+void GapImage::fillData(int x, int y, RGBA &rgb) { throw logic_error("Operation unsupported.");  }
 
 int GapImage::width() const{
     return m_width;
@@ -69,7 +71,7 @@ void GapImage::custom(){
     if(m_data == NULL) throw runtime_error("Out of memery.");
 
     for(int y = 0; y < height; y++){
-        for(int x = 0; x < height; x++){
+        for(int x = 0; x < width; x++){
             fillData(x, y, m_data[y * width + x]);
         }
     }

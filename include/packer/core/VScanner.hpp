@@ -11,7 +11,7 @@ class VScanner{
 public:
     virtual bool scan(int id, const VImage &img) =0;
     virtual Rect rangeOf(int id) const =0;
-    virtual ~VScanner() =0;
+    virtual ~VScanner();
 };
 
 PACKER_END

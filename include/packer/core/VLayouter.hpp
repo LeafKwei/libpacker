@@ -12,7 +12,7 @@ public:
     virtual int finalWidth() const =0;
     virtual int finalHeight() const =0;
     virtual Rect rangeOf(int id) const =0;
-    virtual ~VLayouter() =0;
+    virtual ~VLayouter();
 };
 
 PACKER_END

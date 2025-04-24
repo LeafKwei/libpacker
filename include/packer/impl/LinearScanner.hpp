@@ -11,7 +11,7 @@ PACKER_BEGIN
 class LinearScanner : public VScanner{
 public:
     LinearScanner();
-    ~LinearScanner();
+    ~LinearScanner() override;
     bool scan(int id, const VImage &img) override;
     Rect rangeOf(int id) const override;
 
