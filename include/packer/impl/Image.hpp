@@ -1,20 +1,20 @@
-#ifndef PACKER_GAPIMAGE_HPP
-#define PACKER_GAPIMAGE_HPP
+#ifndef PACKER_IMAGE_HPP
+#define PACKER_IMAGE_HPP
 
 #include "packer/packer.hpp"
 #include "packer/core/VImage.hpp"
 PACKER_BEGIN
 
-class GapImage : public VImage{
+class Image : public VImage{
 public:
-    GapImage(int width, int height);
-    ~GapImage() override;
+    Image(int width, int height);
+    ~Image() override;
     int width() const override;
     int height() const override;
     RGBA access(int x, int y) const override;
     void place(int x, int y, const RGBA &rgb) override;;
     void placeRect(int x, int y, const VImage &src, const Rect &rect) override;
-    const RGBA* accessAll() override;
+    RGBA* accessAll() override;
 
 private:
     int m_width;

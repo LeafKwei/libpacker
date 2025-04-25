@@ -11,9 +11,9 @@ public:
     virtual int width() const =0;
     virtual int height() const =0;
     virtual RGBA access(int x, int y) const =0;
+    virtual RGBA* accessAll() =0;
     virtual void place(int x, int y, const RGBA &rgb) =0;
     virtual void placeRect(int x, int y, const VImage &src, const Rect &rect) =0;
-    virtual const RGBA* accessAll() =0;
     virtual ~VImage();
 };
 
