@@ -73,9 +73,9 @@ bool LinearScanner::scan(int id, const VImage &img) {
 }
 
 Rect LinearScanner::rangeOf(int id) const{
-    auto ite = m_ranges.find(id);
-    if(ite == m_ranges.end()) throw std::logic_error("Invalid ID.");
-    return ite -> second;
+    auto pos = m_ranges.find(id);
+    if(pos == m_ranges.end()) throw std::logic_error("Invalid ID.");
+    return pos -> second;
 }
 
 PACKER_END

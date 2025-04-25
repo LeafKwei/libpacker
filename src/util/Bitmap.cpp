@@ -19,25 +19,25 @@ Bitmap::~Bitmap(){
 
 void Bitmap::set(int pos){
     int byteIdx = pos / 8;
-    if(byteIdx < 0 || byteIdx >= m_bytes) throw logic_error("Invalid postion.");
+    if(isBadIdx(byteIdx)) throw logic_error("Invalid postion.");
     m_ptr[byteIdx] |= 1 << (pos % 8);
 }
 
 void Bitmap::unset(int pos){
     int byteIdx = pos / 8;
-    if(byteIdx < 0 || byteIdx >= m_bytes) throw logic_error("Invalid postion.");
+    if(isBadIdx(byteIdx)) throw logic_error("Invalid postion.");
     m_ptr[byteIdx] &= ~(1 << (pos % 8));
 }
 
 bool Bitmap::test(int pos) const{
     int byteIdx = pos / 8;
-    if(byteIdx < 0 || byteIdx >= m_bytes) throw logic_error("Invalid postion.");
+    if(isBadIdx(byteIdx)) throw logic_error("Invalid postion.");
     uint8_t tmp = m_ptr[byteIdx];
     return (tmp >> (pos % 8)) & 1;
 }
 
 void Bitmap::resize(int size){
-    if(size <= 0) return;
+    if(size <= 0) throw logic_error("Size must be a positive number.");
     int tmp_bytes = (size / 8) + 1;
     uint8_t* tmp_ptr = (uint8_t*) calloc(sizeof(uint8_t) * tmp_bytes, 1);
     if(tmp_ptr == NULL) throw runtime_error("Out of memery.");
@@ -65,6 +65,11 @@ void Bitmap::clear(){
 
 int Bitmap::size() const{
     return m_size;
+}
+
+inline bool Bitmap::isBadIdx(int idx) const{
+    if(idx < 0 || idx >= m_bytes) return true;
+    return false;
 }
 
 PACKER_END

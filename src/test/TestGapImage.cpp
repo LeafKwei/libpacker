@@ -8,32 +8,11 @@ using packer::VImage;
 
 class MyImage : public GapImage{
 public:
-    MyImage(int width, int height){
-        tmp1 = width;
-        tmp2 = height;
-        custom();
+    MyImage(int width, int height) : GapImage(width, height){
     }
 
 protected:
-    void readRawImage() override{
-        m_cusWidth = tmp1;
-        m_cusHeight = tmp2;
-    }
 
-    int customedWidth() const override{
-        return m_cusWidth;
-    }
-
-    int customedHeight() const override{
-        return m_cusHeight;
-    }
-
-    void fillData(int x, int y, RGBA &rgb) override{
-        rgb.a = 255;
-        rgb.r = 29;
-        rgb.g = 100;
-        rgb.b = 30;
-    }
 
 private:
     int tmp1, tmp2;

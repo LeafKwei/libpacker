@@ -9,8 +9,8 @@ PACKER_BEGIN
 class VLayouter{
 public:
     virtual void laydown(int id, int width, int height) =0;
-    virtual int finalWidth() const =0;
-    virtual int finalHeight() const =0;
+    virtual int currentWidth() const =0;
+    virtual int currentHeight() const =0;
     virtual Rect rangeOf(int id) const =0;
     virtual ~VLayouter();
 };

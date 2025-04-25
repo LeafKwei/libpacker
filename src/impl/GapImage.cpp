@@ -2,14 +2,10 @@
 #include <stdexcept>
 #include "iostream"
 #include "packer/impl/GapImage.hpp"
-#include "packer/impl/GapImage.hpp"
+#include "packer/util/util.hpp"
 using std::logic_error;
 using std::runtime_error;
 PACKER_BEGIN
-
-GapImage::GapImage() : m_width(0), m_height(0), m_data(NULL){
-
-}
 
 GapImage::GapImage(int width, int height) : m_width(0), m_height(0), m_data(NULL){
     createBuffer(width, height);
@@ -21,11 +17,6 @@ GapImage::~GapImage(){
     free(m_data);
 }
 
-void GapImage::readRawImage() { throw logic_error("Operation unsupported");  }
-int GapImage::customedHeight() const { throw logic_error("Operation unsupported.");  }
-int GapImage::customedWidth() const { throw logic_error("Operation unsupported.");  }
-void GapImage::fillData(int x, int y, RGBA &rgb) { throw logic_error("Operation unsupported.");  }
-
 int GapImage::width() const{
     return m_width;
 }
@@ -35,17 +26,17 @@ int GapImage::height() const{
 }
 
 RGBA GapImage::access(int x, int y) const{
-    if(x < 0 || y < 0 || x >= m_width || y >= m_height) throw logic_error("Invalid postion.");
+    if(isBadCoord(x, y, m_width, m_height)) throw logic_error("Invalid position.");
     return m_data[y * m_width + x];
 }
 
 void GapImage::place(int x, int y, const RGBA &rgb){
-    if(x < 0 || y < 0 || x >= m_width || y >= m_height) throw logic_error("Invalid postion.");
+    if(isBadCoord(x, y, m_width, m_height)) throw logic_error("Invalid position.");
     m_data[y * m_width + x] = rgb;
 }
 
 void GapImage::placeRect(int x, int y, const VImage &src, const Rect &rect){
-    if(x < 0 || y < 0 || x >= m_width || y >= m_height) throw logic_error("Invalid postion.");
+    if(isBadCoord(x, y, m_width, m_height)) throw logic_error("Invalid position.");
     if(x + rect.width > m_width || y + rect.height > m_height) throw logic_error("Out of range.");
     
     for(int vy = 0; vy < rect.height; vy++){
@@ -60,28 +51,10 @@ const RGBA* GapImage::accessAll(){
     return m_data;
 }
 
-void GapImage::custom(){
-    readRawImage();
-    int width = customedWidth(), height = customedHeight();
-    createBuffer(width, height);
-    m_width = width;
-    m_height = height;
-
-    m_data = (RGBA*) malloc(sizeof(RGBA) * width * height);
-    if(m_data == NULL) throw runtime_error("Out of memery.");
-
-    for(int y = 0; y < height; y++){
-        for(int x = 0; x < width; x++){
-            fillData(x, y, m_data[y * width + x]);
-        }
-    }
-}
-
 void GapImage::createBuffer(int width, int height){
     if(width < 0 || height < 0) throw logic_error("Invalid size.");
     m_data = (RGBA*) malloc(sizeof(RGBA) * width * height);
     if(m_data == NULL) throw std::runtime_error("Out of memery.");
 }
-
 
 PACKER_END

@@ -16,14 +16,6 @@ public:
     void placeRect(int x, int y, const VImage &src, const Rect &rect) override;
     const RGBA* accessAll() override;
 
-protected:
-    GapImage();
-    void custom();
-    virtual void readRawImage();
-    virtual int customedWidth() const;
-    virtual int customedHeight() const;
-    virtual void fillData(int x, int y, RGBA &rgb);
-
 private:
     int m_width;
     int m_height;

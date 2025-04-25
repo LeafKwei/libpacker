@@ -15,8 +15,9 @@ public:
     void unset(int pos);  //将pos位置的bit置0
     bool test(int pos) const; //测试pos位置的bit是否为1
     void resize(int size);    //重设Bitmap的大小，已set的bit位将再在新的Bitmap中保留
-    int size() const;         //获取Bitmap的大小
-    void clear();             //将所有bit位置0
+    int size() const;           //获取Bitmap的大小
+    void clear();                //将所有bit位置0
+    inline bool isBadIdx(int idx) const; //检查索引是否越界
 
 private:
     int m_size;
