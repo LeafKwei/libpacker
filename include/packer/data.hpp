@@ -8,10 +8,14 @@
 #include "packer/core/VImage.hpp"
 PACKER_BEGIN
 
-struct Record{
-    std::string id;
+struct Profile{
+	std::string id;
     Rect srcRange;
     Rect dstRange;
+};
+
+struct Record{
+    Profile profile;
     std::unique_ptr<VImage> imgptr;
     Record() : imgptr(nullptr){}
 };
