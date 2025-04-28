@@ -10,16 +10,14 @@ class SimpleLayouter : public VLayouter{
 public:
     SimpleLayouter();
     SimpleLayouter(int scale, int width, int height);
-    void laydown(int id, int width, int height) override;
+    void laydown(int width, int height, Rect &result) override;
     int currentWidth() const override;
     int currentHeight() const override;
-    Rect rangeOf(int id) const override;
 
 private:
     int m_scale;
     int m_width;
     int m_height;
-    std::map<int, Rect> m_ranges;
     Bitmap m_note;
 
     void setAt(int x, int y);

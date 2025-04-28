@@ -6,11 +6,10 @@
 #include "packer/packer.hpp"
 PACKER_BEGIN
 
-/* Scanner可以对一个VImage对象执行扫描，并在内部生成一个Rect用于记录VImage内非透明像素的范围 */
+/* Scanner可以对一个VImage对象执行扫描，并将VImage内非透明像素的范围记录于result */
 class VScanner{
 public:
-    virtual bool scan(int id, const VImage &img) =0;
-    virtual Rect rangeOf(int id) const =0;
+    virtual bool scan(const VImage &img, Rect &result) =0;
     virtual ~VScanner();
 };
 

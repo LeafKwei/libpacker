@@ -8,10 +8,9 @@ PACKER_BEGIN
 /* Layouter计算指定宽高的图片在最终合并的png文件中的布局位置 */
 class VLayouter{
 public:
-    virtual void laydown(int id, int width, int height) =0;
+    virtual void laydown(int width, int height, Rect &result) =0;
     virtual int currentWidth() const =0;
     virtual int currentHeight() const =0;
-    virtual Rect rangeOf(int id) const =0;
     virtual ~VLayouter();
 };
 

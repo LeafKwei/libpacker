@@ -4,11 +4,11 @@
 using std::logic_error;
 PACKER_BEGIN
 
-SimpleLayouter::SimpleLayouter() : SimpleLayouter(16, 40, 30)
+SimpleLayouter::SimpleLayouter() : SimpleLayouter(16, 40, 30)  //640x480
 { }
 
 SimpleLayouter::SimpleLayouter(int scale, int width, int height){
-    if(scale <= 0) throw logic_error("Size must be a positive number.");
+    if(scale <= 0) throw logic_error("Scale must be a positive number.");
     if(width <= 0 || height <= 0) throw logic_error("Width or height must be a positive number.");
     m_scale = scale;
     m_width = width;
@@ -16,8 +16,29 @@ SimpleLayouter::SimpleLayouter(int scale, int width, int height){
     m_note.resize(m_width * m_height);
 }
 
-void SimpleLayouter::laydown(int id, int width, int height){
+void SimpleLayouter::laydown(int width, int height, Rect &result){
+    if(width <=0 || height <= 0) throw logic_error("Width or height must be a positive number.");
+    if(width > m_width) throw logic_error("Image width is too large.");
 
+    /* 计算缩放后的宽度和高度 */
+    int scaledWidth = width / m_scale;
+    int scaledHeight = height / m_scale;
+    scaledWidth = scaledWidth > 0 ? scaledWidth : 1;
+    scaledHeight = scaledHeight > 0 ? scaledHeight : 1;
+
+    for(int y = 0; y < m_height;  y++){
+        for(int x = 0; x < m_width; x++){
+            /* 如果bit已占用，则跳过 */
+            if(testAt(x, y)) continue;
+
+            /* bit未占用时，检查当前坐标增加上图片宽高后是否越界 */
+            if(x + scaledWidth > m_width) break;                                                       //x轴越界时则搜索下一行
+            if(y + scaledHeight > m_height) expandHeight(width / m_scale + 1);     //y轴越界时则拓展高度
+
+            /* 检查范围内的坐标是否是空置的 */
+            
+        }
+    }
 }
 
 int SimpleLayouter::currentWidth() const{
@@ -26,12 +47,6 @@ int SimpleLayouter::currentWidth() const{
 
 int SimpleLayouter::currentHeight() const{
     return m_height;
-}
-
-Rect SimpleLayouter::rangeOf(int id) const{
-    auto pos = m_ranges.find(id);
-    if(pos == m_ranges.end()) throw std::logic_error("Invalid ID.");
-    return pos -> second;
 }
 
 void SimpleLayouter::setAt(int x, int y){

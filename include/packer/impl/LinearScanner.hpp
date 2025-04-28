@@ -12,11 +12,7 @@ class LinearScanner : public VScanner{
 public:
     LinearScanner();
     ~LinearScanner() override;
-    bool scan(int id, const VImage &img) override;
-    Rect rangeOf(int id) const override;
-
-private:
-    std::map<int, Rect> m_ranges;
+    bool scan(const VImage &img, Rect &result) override;
 };
 
 PACKER_END

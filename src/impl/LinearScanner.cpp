@@ -10,9 +10,7 @@ LinearScanner::~LinearScanner(){
 
 }
 
-bool LinearScanner::scan(int id, const VImage &img) {
-    Rect result;
-
+bool scan(const VImage &img, Rect &result) {
     /* 从上到下找到首个非透明像素的坐标 */
     int x1 = -1, y1 = -1;
     for(int y = 0; y < img.height(); y++){
@@ -68,14 +66,7 @@ bool LinearScanner::scan(int id, const VImage &img) {
     result.width = x4 - x3 + 1;
     result.height = y2 - y1 + 1;
 
-    m_ranges.insert(std::make_pair(id, result));
     return true;
-}
-
-Rect LinearScanner::rangeOf(int id) const{
-    auto pos = m_ranges.find(id);
-    if(pos == m_ranges.end()) throw std::logic_error("Invalid ID.");
-    return pos -> second;
 }
 
 PACKER_END

@@ -2,8 +2,19 @@
 #define PACKER_DATA_HPP
 
 #include <cstdint>
+#include <string>
+#include <memory>
 #include "packer/packer.hpp"
+#include "packer/core/VImage.hpp"
 PACKER_BEGIN
+
+struct Record{
+    std::string id;
+    Rect srcRange;
+    Rect dstRange;
+    std::unique_ptr<VImage> imgptr;
+    Record() : imgptr(nullptr){}
+};
 
 struct Point{
     int x;
