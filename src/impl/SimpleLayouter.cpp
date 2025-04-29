@@ -17,28 +17,12 @@ SimpleLayouter::SimpleLayouter(int scale, int width, int height){
 }
 
 void SimpleLayouter::laydown(int width, int height, Rect &result){
-    if(width <=0 || height <= 0) throw logic_error("Width or height must be a positive number.");
-    if(width > m_width) throw logic_error("Image width is too large.");
+    if(width <= 0 || height <= 0) throw logic_error("Width or height must be a positive number.");
 
-    /* 计算缩放后的宽度和高度 */
-    int scaledWidth = width / m_scale;
-    int scaledHeight = height / m_scale;
-    scaledWidth = scaledWidth > 0 ? scaledWidth : 1;
-    scaledHeight = scaledHeight > 0 ? scaledHeight : 1;
-
-    for(int y = 0; y < m_height;  y++){
-        for(int x = 0; x < m_width; x++){
-            /* 如果bit已占用，则跳过 */
-            if(testAt(x, y)) continue;
-
-            /* bit未占用时，检查当前坐标增加上图片宽高后是否越界 */
-            if(x + scaledWidth > m_width) break;                                                       //x轴越界时则搜索下一行
-            if(y + scaledHeight > m_height) expandHeight(width / m_scale + 1);     //y轴越界时则拓展高度
-
-            /* 检查范围内的坐标是否是空置的 */
-            
-        }
-    }
+    Rect range;
+    confirmRange(width, height, range);
+    if(range.width <= 0) throw logic_error("Image width is too large.");
+    if(range.height <= 0 ) expandHeight(-range.height + 1);
 }
 
 int SimpleLayouter::currentWidth() const{
@@ -50,31 +34,44 @@ int SimpleLayouter::currentHeight() const{
 }
 
 void SimpleLayouter::setAt(int x, int y){
-    m_note.set(transDimen(x, y));
+    m_note.set(transDimension(x, y));
 }
 
 void SimpleLayouter::unsetAt(int x, int y){
-    m_note.unset(transDimen(x, y));
+    m_note.unset(transDimension(x, y));
 }
 
 bool SimpleLayouter::testAt(int x, int y){
-    return m_note.test(transDimen(x, y));
+    return m_note.test(transDimension(x, y));
 }
 
 void SimpleLayouter::rangedSetAt(const Rect &rect){
-    for(int y = 0; y < rect.height; y++){
-        for(int x = 0; x < rect.width; x++){
-            m_note.set(transDimen(x, y));
-        }
+    if(isBadCoord(rect.x, rect.y, m_width, m_height)) throw logic_error("Invalid position.");
+    for(int y = rect.y; y < rect.height; y++){
+        int pos = transDimension(rect.x, y);
+        if(pos + rect.width > m_note.size()) throw logic_error("Out of range.");
+        m_note.setn(pos, rect.width);
     }
 }
 
 void SimpleLayouter::rangedUnsetAt(const Rect &rect){
-     for(int y = 0; y < rect.height; y++){
-        for(int x = 0; x < rect.width; x++){
-            m_note.unset(transDimen(x, y));
-        }
+     if(isBadCoord(rect.x, rect.y, m_width, m_height)) throw logic_error("Invalid position.");
+     for(int y = rect.y; y < rect.height; y++){
+        int pos = transDimension(rect.x, y);
+        if(pos + rect.width > m_note.size()) throw logic_error("Out of range.");
+        m_note.unsetn(pos, rect.width);
     }
+}
+
+bool SimpleLayouter::testAtOR(const Rect &rect){
+    if(isBadCoord(rect.x, rect.y, m_width, m_height)) throw logic_error("Invalid position.");
+    for(int y = rect.y; y < rect.height; y++){
+        int pos = transDimension(rect.x, y);
+        if(pos + rect.width > m_note.size()) throw logic_error("Out of range.");
+        if(m_note.testOR(pos, rect.width)) return true;
+    }
+
+    return false;
 }
 
 void SimpleLayouter::expandHeight(int increment){
@@ -83,9 +80,15 @@ void SimpleLayouter::expandHeight(int increment){
     m_height += increment;
  }
 
-int SimpleLayouter::transDimen(int x, int y){
+int SimpleLayouter::transDimension(int x, int y){
     if(isBadCoord(x, y, m_width, m_height)) throw logic_error("Invalid position.");
     return y * m_width + x;
-}   
+}
+
+Rect SimpleLayouter::confirmRange(int width, int height, Rect &range){
+    range.width = m_width - width + 1;
+    range.height = m_height - height + 1;
+    return range;
+}
 
 PACKER_END

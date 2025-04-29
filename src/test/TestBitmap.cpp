@@ -4,19 +4,16 @@ using packer::Bitmap;
 
 int main(void){
     printf("---start test---\n");
-    Bitmap bitmap(128);
-    printf("size = %d\n", bitmap.size());
-    
-    printf("no set: %d\n", bitmap.test(0));
-    bitmap.set(1);
-    printf("set: %d\n", bitmap.test(1));
+    Bitmap bitmap(16);
 
-    bitmap.resize(1024);
-    printf("new size: %d\n", bitmap.size());
-    bitmap.set(1023);
-    printf("set: %d\n", bitmap.test(1023));
-    bitmap.clear();
-    printf("clear: %d\n", bitmap.test(1023));
+    bitmap.setn(0, 16);
+    if(bitmap.testAND(0, 16)) printf("All in true\n");
+    
+    bitmap.unsetn(0, 16);
+    if(!bitmap.testAND(0, 16)) printf("All in false\n");
+
+    bitmap.set(6);
+    if(bitmap.testOR(0, 16)) printf("One in true");
 
     return 0;
 }

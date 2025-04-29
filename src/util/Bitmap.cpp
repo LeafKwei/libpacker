@@ -14,7 +14,8 @@ Bitmap::Bitmap(int size) : m_ptr(nullptr){
 }
 
 Bitmap::~Bitmap(){
-    if(m_ptr != NULL) free(m_ptr);
+    free(m_ptr);
+    m_ptr = NULL;
 }
 
 void Bitmap::set(int pos){
@@ -23,10 +24,28 @@ void Bitmap::set(int pos){
     m_ptr[byteIdx] |= 1 << (pos % 8);
 }
 
+void Bitmap::setn(int pos, int n){
+    int maxIdx = (pos + n - 1) / 8;
+    if(isBadIdx(maxIdx)) throw logic_error("Invalid postion or length.");
+    for(int i = pos; i < pos + n; i++){
+        int byteIdx = i / 8;
+        m_ptr[byteIdx] |= (1 << i % 8);
+    }
+}
+
 void Bitmap::unset(int pos){
     int byteIdx = pos / 8;
     if(isBadIdx(byteIdx)) throw logic_error("Invalid postion.");
     m_ptr[byteIdx] &= ~(1 << (pos % 8));
+}
+
+void Bitmap::unsetn(int pos, int n){
+    int maxIdx = (pos + n - 1) / 8;
+    if(isBadIdx(maxIdx)) throw logic_error("Invalid postion or length.");
+    for(int i = pos; i < pos + n; i++){
+        int byteIdx = i / 8;
+        m_ptr[byteIdx] &= ~(1 << i % 8);
+    }
 }
 
 bool Bitmap::test(int pos) const{
@@ -34,6 +53,34 @@ bool Bitmap::test(int pos) const{
     if(isBadIdx(byteIdx)) throw logic_error("Invalid postion.");
     uint8_t tmp = m_ptr[byteIdx];
     return (tmp >> (pos % 8)) & 1;
+}
+
+bool Bitmap::testAND(int pos, int len){
+    int result = 1;
+    int maxIdx = (pos + len - 1) / 8;
+    if(isBadIdx(maxIdx)) throw logic_error("Invalid postion or length.");
+    for(int i = pos; i < pos + len; i++){
+        int byteIdx = i / 8;
+        uint8_t tmp = m_ptr[byteIdx];
+        result &= ((tmp >> (i % 8)) & 1);
+        if(result == 0) break;
+    }
+
+    return result;
+}
+
+bool Bitmap::testOR(int pos, int len){
+     int result = 0;
+    int maxIdx = (pos + len - 1) / 8;
+    if(isBadIdx(maxIdx)) throw logic_error("Invalid postion or length.");
+    for(int i = pos; i < pos + len; i++){
+        int byteIdx = i / 8;
+        uint8_t tmp = m_ptr[byteIdx];
+        result |= ((tmp >> (i % 8)) & 1);
+        if(result == 1) break;
+    }
+
+    return result;
 }
 
 void Bitmap::resize(int size){
