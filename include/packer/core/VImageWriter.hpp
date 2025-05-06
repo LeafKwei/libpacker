@@ -3,7 +3,7 @@
 
 #include "packer/core/VImage.hpp"
 #include "packer/packer.hpp"
-#include "packer/data.hpp"
+#include "packer/data/data.hpp"
 PACKER_BEGIN
 
 class VImageWriter {

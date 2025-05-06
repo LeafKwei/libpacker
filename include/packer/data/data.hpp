@@ -12,18 +12,21 @@ struct Profile{
 	std::string id;
     Rect srcRange;
     Rect dstRange;
+    operator bool();
 };
 
 struct Record{
     Profile profile;
     std::unique_ptr<VImage> imgptr;
-    Record() : imgptr(nullptr){}
+    Record();
+    operator bool();
 };
 
 struct Point{
     int x;
     int y;
-    Point() : x(0), y(0) {}
+    Point();
+    operator bool();
 };
 
 struct Rect{
@@ -31,7 +34,8 @@ struct Rect{
     int y;
     int width;
     int height;
-    Rect() : x(0), y(0), width(0), height(0) {}
+    Rect();
+    operator bool();
 };
 
 struct RGBA_Struct{
@@ -39,7 +43,7 @@ struct RGBA_Struct{
     uint8_t g;
     uint8_t b;
     uint8_t a;
-    RGBA_Struct() : r(0), g(0), b(0), a(0) {}
+    RGBA_Struct();
 };
 
 typedef RGBA_Struct RGBA;

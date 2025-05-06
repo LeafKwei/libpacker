@@ -1,7 +1,7 @@
 #ifndef PACKER_VPROFILEWRITER_HPP
 #define PACKER_VPROFILEWRITER_HPP
 
-#include "packer/data.hpp"
+#include "packer/data/data.hpp"
 PACKER_BEGIN
 
 class VProfileWriter{

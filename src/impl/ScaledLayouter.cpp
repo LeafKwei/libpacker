@@ -18,7 +18,41 @@ ScaledLayouter::ScaledLayouter(int scale, int layouterWidth, int layouterHeight)
 }
 
 void ScaledLayouter::laydown(int imageWidth, int imageHeight, Rect &result){
-    
+    if(imageWidth <= 0 ||  imageHeight <= 0) throw logic_error("Width or height must be a positive number.");
+
+    int scaledWidth, scaledHeight;
+    scaledWidth = imageWidth / m_scale;
+    scaledHeight = imageHeight / m_scale;
+    scaledWidth += imageWidth % m_scale == 0 ? 0 : 1;
+    scaledHeight += imageHeight % m_scale == 0 ? 0 : 1;
+    scaledLaydown(scaledWidth, scaledHeight, result);
+    result.x = scale(result.x);
+    result.y = scale(result.y);
+    result.width = scale(result.width);
+    result.height = scale(result.height);
+}
+
+void ScaledLayouter::scaledLaydown(int scaledWidth, int scaledHeight, Rect &result){
+    if(scaledWidth > m_layouterWidth) throw logic_error("Image width after scale must less than layouter width.");
+   
+    result.x = -1;
+    result.y = -1;
+
+    while(result){
+        Rect range = calcRange(scaledWidth, scaledHeight);
+        if(!range) {
+            expandHeight(scaledHeight - m_layouterHeight);
+            continue;
+        }
+
+        Point point = findEmptyPoint(range);
+        if(!point){
+            expandHeight(scaledHeight);
+            continue;
+        }
+
+        
+    }
 }
 
 int ScaledLayouter::packedImageWidth() const{

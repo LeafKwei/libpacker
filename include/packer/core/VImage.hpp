@@ -1,7 +1,7 @@
 #ifndef PACKER_VIMAGE_HPP
 #define PACKER_VIMAGE_HPP
 
-#include "packer/data.hpp"
+#include "packer/data/data.hpp"
 #include "packer/packer.hpp"
 PACKER_BEGIN
 

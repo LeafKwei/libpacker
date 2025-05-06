@@ -1,7 +1,7 @@
 #ifndef PACKER_VSCANNER_HPP
 #define PACKER_VSCANNER_HPP
 
-#include "packer/data.hpp"
+#include "packer/data/data.hpp"
 #include "packer/core/VImage.hpp"
 #include "packer/packer.hpp"
 PACKER_BEGIN

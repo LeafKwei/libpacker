@@ -3,15 +3,14 @@
 
 #include <map>
 #include "packer/packer.hpp"
-#include "packer/data.hpp"
 #include "packer/core/VScanner.hpp"
 
 PACKER_BEGIN
 
-class LinearScanner : public VScanner{
+class DefaultScanner : public VScanner{
 public:
-    LinearScanner();
-    ~LinearScanner() override;
+    DefaultScanner();
+    ~DefaultScanner() override;
     bool scan(const VImage &img, Rect &result) override;
 };
 

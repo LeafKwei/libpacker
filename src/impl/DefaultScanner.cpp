@@ -1,16 +1,16 @@
 #include <stdexcept>
-#include "packer/impl/LinearScanner.hpp"
+#include "packer/impl/DefaultScanner.hpp"
 PACKER_BEGIN
 
-LinearScanner::LinearScanner(){
+DefaultScanner::DefaultScanner(){
 
 }
 
-LinearScanner::~LinearScanner(){
+DefaultScanner::~DefaultScanner(){
 
 }
 
-bool scan(const VImage &img, Rect &result) {
+bool DefaultScanner::scan(const VImage &img, Rect &result) {
     /* 从上到下找到首个非透明像素的坐标 */
     int x1 = -1, y1 = -1;
     for(int y = 0; y < img.height(); y++){

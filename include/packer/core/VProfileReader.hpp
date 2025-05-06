@@ -1,7 +1,7 @@
 #ifndef PACKER_VPROFILEREADER_HPP
 #define PACKER_VPROFILEREADER_HPP
 
-#include "packer/data.hpp"
+#include "packer/data/data.hpp"
 PACKER_BEGIN
 
 class VProfileReader{

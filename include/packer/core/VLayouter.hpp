@@ -2,7 +2,7 @@
 #define PACKER_VLAYOUTER_HPP
 
 #include "packer/packer.hpp"
-#include "packer/data.hpp"
+#include "packer/data/data.hpp"
 PACKER_BEGIN
 
 /* Layouter计算指定宽高的图片在最终合并的png文件中的布局位置 */

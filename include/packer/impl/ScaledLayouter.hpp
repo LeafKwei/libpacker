@@ -20,6 +20,7 @@ private:
     Bitmap m_note;
 
     inline int scale(int value) const;
+    void scaledLaydown(int scaledWidth, int scaledHeight, Rect &result);
     void setAt(int x, int y);
     void unsetAt(int x, int y);
     bool testAt(int x, int y);
@@ -28,6 +29,8 @@ private:
     void rangedUnsetAt(const Rect &rect);
     void expandHeight(int increment);
     int transDimension(int x, int y);
+    Rect calcRange(int scaledWidth, int scaledHeight);
+    Point findEmptyPoint(const Rect & range);
 };
 
 PACKER_END
