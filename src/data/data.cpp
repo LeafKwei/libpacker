@@ -1,4 +1,5 @@
 #include "packer/data/data.hpp"
+#include "packer/core/VImage.hpp"
 PACKER_BEGIN
 
 Record::Record() : imgptr(nullptr){}

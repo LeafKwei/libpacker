@@ -5,22 +5,8 @@
 #include <string>
 #include <memory>
 #include "packer/packer.hpp"
-#include "packer/core/VImage.hpp"
 PACKER_BEGIN
-
-struct Profile{
-	std::string id;
-    Rect srcRange;
-    Rect dstRange;
-    operator bool();
-};
-
-struct Record{
-    Profile profile;
-    std::unique_ptr<VImage> imgptr;
-    Record();
-    operator bool();
-};
+class VImage;
 
 struct Point{
     int x;
@@ -44,6 +30,19 @@ struct RGBA_Struct{
     uint8_t b;
     uint8_t a;
     RGBA_Struct();
+};
+struct Profile{
+	std::string id;
+    Rect srcRange;
+    Rect dstRange;
+    operator bool();
+};
+
+struct Record{
+    Profile profile;
+    std::unique_ptr<VImage> imgptr;
+    Record();
+    operator bool();
 };
 
 typedef RGBA_Struct RGBA;

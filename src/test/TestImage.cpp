@@ -1,5 +1,5 @@
 #include <iostream>
-#include "packer/data.hpp"
+#include "packer/data/data.hpp"
 #include "packer/impl/Image.hpp"
 #include "packer/impl/ImageReader.hpp"
 #include "packer/impl/ImageWriter.hpp"
@@ -12,6 +12,10 @@ using packer::ImageWriter;
 
 class MyReader : public ImageReader{
 protected:
+    std::string id() override{
+        return "";
+    }
+
     void initialize(int &width, int &height) override{
             width = 30;
             height = 60;
