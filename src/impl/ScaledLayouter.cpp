@@ -1,7 +1,9 @@
 #include <stdexcept>
+#include <functional>
 #include "packer/util/util.hpp"
 #include "packer/impl/ScaledLayouter.hpp"
 using std::logic_error;
+using std::function;
 PACKER_BEGIN
 
 ScaledLayouter::ScaledLayouter(int scale, int layouterWidth, int layouterHeight){
@@ -34,11 +36,6 @@ Rect ScaledLayouter::laydown(int imageWidth, int imageHeight){
 Rect ScaledLayouter::scaledLaydown(int scaledWidth, int scaledHeight){
     if(scaledWidth > m_layouterWidth) throw logic_error("Image width after scale must less than layouter width.");
    
-    Rect result;
-    Rect testRange;
-    result.x = -1;
-    result.y = -1;
-
     while(true){
         Rect range = calcRange(scaledWidth, scaledHeight);
         if(!range) {
@@ -46,49 +43,17 @@ Rect ScaledLayouter::scaledLaydown(int scaledWidth, int scaledHeight){
             continue;
         }
 
+        Rect result;
+
         for(int y = range.y; y < range.y + range.height; y++){
             for(int x = range.x; x < range.x + range.width; x++){
-                testRange.x = x;
-                testRange.y = y;
-                testRange.width = scaledWidth;
-                testRange.height = scaledHeight;
-
-
-                printf("ranged test at :%d, %d\n", testRange.x, testRange.y);
-                printf("test result: %d\n", rangedTestAt(testRange));
-                if(rangedTestAt(testRange)){
-                    printf(">>>>>>>>>>>>>>>>>>>>>>>>>>>>\n");
-                    printf("result.x:%d, result.y:%d\n", result.x, result.y);
-                    for(int i = y; i < scaledHeight; i++){
-                        printf("y%d==%d\t\t: ", i, i*m_scale);
-                        for(int j = x; j < scaledWidth; j++){
-                            printf("%d", m_note.test(transDimension(j, i)));
-                        }
-                        printf("\n");
-                    }
-                printf("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n");
-                }
-
-
-                if(rangedTestAt(testRange)) continue;
-                
                 result.x = x;
                 result.y = y;
                 result.width = scaledWidth;
                 result.height = scaledHeight;
 
-                printf("------------------------------\n");
-                    printf("result.x:%d, result.y:%d\n", result.x, result.y);
-                    for(int i = 0; i < m_layouterHeight; i++){
-                        printf("y%d==%d\t\t: ", i, i*m_scale);
-                        for(int j = 0; j < m_layouterWidth; j++){
-                            printf("%d", m_note.test(transDimension(j, i)));
-                        }
-                        printf("\n");
-                    }
-                printf("------------------------------\n");
-
-                rangedSetAt(testRange);
+                if(rangedTestAt(result)) continue;
+                rangedSetAt(result);
                 return result;
             }
         }
@@ -134,27 +99,30 @@ bool ScaledLayouter::testAt(int x, int y){
     return m_note.test(transDimension(x, y));
 }
 
-void ScaledLayouter::rangedSetAt(const Rect &rect){
+void ScaledLayouter::rangedWork(const Rect &rect, function<void(int,int)> func){
     if(isBadCoord(rect.x, rect.y, m_layouterWidth, m_layouterHeight)) throw logic_error("Invalid position.");
-    for(int y = rect.y; y < rect.height; y++){
+    for(int y = rect.y; y < rect.y + rect.height; y++){
         int pos = transDimension(rect.x, y);
         if(pos + rect.width > m_note.size()) throw logic_error("Out of range.");
-        m_note.setn(pos, rect.width);
+        func(pos, rect.width);
     }
 }
 
+void ScaledLayouter::rangedSetAt(const Rect &rect){
+    rangedWork(rect, [this](int pos, int width) -> void{
+        m_note.setn(pos, width);
+    });
+}
+
 void ScaledLayouter::rangedUnsetAt(const Rect &rect){
-     if(isBadCoord(rect.x, rect.y, m_layouterWidth, m_layouterHeight)) throw logic_error("Invalid position.");
-     for(int y = rect.y; y < rect.height; y++){
-        int pos = transDimension(rect.x, y);
-        if(pos + rect.width > m_note.size()) throw logic_error("Out of range.");
-        m_note.unsetn(pos, rect.width);
-    }
+     rangedWork(rect, [this](int pos, int width) -> void{
+        m_note.unsetn(pos, width);
+     });
 }
 
 bool ScaledLayouter::rangedTestAt(const Rect &rect){
     if(isBadCoord(rect.x, rect.y, m_layouterWidth, m_layouterHeight)) throw logic_error("Invalid position.");
-    for(int y = rect.y; y < rect.height; y++){
+    for(int y = rect.y; y < rect.y + rect.height; y++){
         int pos = transDimension(rect.x, y);
         if(pos + rect.width > m_note.size()) throw logic_error("Out of range.");
         if(m_note.testOR(pos, rect.width)) return true;

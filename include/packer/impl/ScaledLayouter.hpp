@@ -24,6 +24,7 @@ private:
     void setAt(int x, int y);
     void unsetAt(int x, int y);
     bool testAt(int x, int y);
+    void rangedWork(const Rect &rect, std::function<void(int,int)> func);
     bool rangedTestAt(const Rect &rect);
     void rangedSetAt(const Rect &rect);
     void rangedUnsetAt(const Rect &rect);

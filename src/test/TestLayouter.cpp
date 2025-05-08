@@ -24,5 +24,5 @@ int main(void){
     printRect(r4);
     Rect r5 = layouter.laydown(1, 1);
     printRect(r5);
-    //printLayouter(layouter);
+    printLayouter(layouter);
 }
