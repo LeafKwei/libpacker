@@ -40,7 +40,7 @@ struct Profile{
 
 struct Record{
     Profile profile;
-    std::unique_ptr<VImage> imgptr;
+    VImage *imgptr;
     Record();
     operator bool();
 };
