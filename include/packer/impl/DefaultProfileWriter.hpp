@@ -3,6 +3,8 @@
 
 #include <cstdio>
 #include "packer/core/VProfileWriter.hpp"
+#include "packer/raii/CharBuffer.hpp"
+#include "packer/raii/FilePtr.hpp"
 PACKER_BEGIN
 
 class DefaultProfileWriter : public VProfileWriter{
@@ -13,6 +15,8 @@ public:
     void finalize() override;
 
 private:
+    FilePtr m_file;
+    CharBuffer m_buffer;
     std::string m_fileName;
 };
 

@@ -3,8 +3,8 @@
 
 #include <cstdio>
 #include "packer/core/VProfileReader.hpp"
-#include "packer/raii/RCharBuffer.hpp"
-#include "packer/raii/RFilePtr.hpp"
+#include "packer/raii/CharBuffer.hpp"
+#include "packer/raii/FilePtr.hpp"
 PACKER_BEGIN
 
 class DefaultProfileReader : public VProfileReader{
@@ -15,8 +15,8 @@ public:
     void finalize() override;
 
 private:
-    RFilePtr m_file;
-    RCharBuffer m_buffer;
+    FilePtr m_file;
+    CharBuffer m_buffer;
     std::string m_fileName;
 };
 

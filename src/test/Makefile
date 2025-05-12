@@ -1,3 +1,5 @@
+TestProfile:
+	g++ -O2 -o TestProfile -I ../../include TestProfile.cpp ../impl/DefaultProfileReader.cpp ../impl/DefaultProfileWriter.cpp ../raii/CharBuffer.cpp ../raii/FilePtr.cpp ../core/VProfileReader.cpp ../core/VProfileWriter.cpp
 TestLayouter:
 	g++ -O2 -o TestLayouter -I ../../include TestLayouter.cpp ../impl/ScaledLayouter.cpp ../util/Bitmap.cpp ../data/data.cpp  ../core/Vlayouter.cpp
 TestImage:
