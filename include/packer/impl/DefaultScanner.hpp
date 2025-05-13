@@ -1,5 +1,5 @@
-#ifndef PACKER_LINEARSCANNER_HPP
-#define PACKER_LINEARSCANNER_HPP
+#ifndef PACKER_DEFAULTSCANNER_HPP
+#define PACKER_DEFAULTSCANNER_HPP
 
 #include <map>
 #include "packer/packer.hpp"

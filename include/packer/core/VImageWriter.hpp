@@ -9,7 +9,7 @@ PACKER_BEGIN
 class VImageWriter {
 public:
     virtual void write(VImage &img) =0;
-    ~VImageWriter();
+    virtual ~VImageWriter();
 };
 
 PACKER_END

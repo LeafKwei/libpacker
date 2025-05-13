@@ -8,7 +8,7 @@ PACKER_BEGIN
 class Image : public VImage{
 public:
     Image(int width, int height);
-    ~Image() override;
+    ~Image();
     int width() const override;
     int height() const override;
     RGBA access(int x, int y) const override;

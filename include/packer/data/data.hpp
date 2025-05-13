@@ -8,6 +8,13 @@
 PACKER_BEGIN
 class VImage;
 
+enum class State{
+    PK_EMPTY,
+    PK_PACKED,
+    UPK_NOSRC,
+    UPK_UNPACKED
+};
+
 enum class Indicator{
     RD_OK,
     RD_EOF,
