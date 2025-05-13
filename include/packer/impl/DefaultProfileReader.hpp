@@ -10,9 +10,8 @@ PACKER_BEGIN
 class DefaultProfileReader : public VProfileReader{
 public:
     DefaultProfileReader(const std::string &path);
-    void initialize() override;
-    bool read(Profile &profile) override;
-    void finalize() override;
+    Indicator read(Profile &profile) override;
+    ~DefaultProfileReader();
 
 private:
     FilePtr m_file;

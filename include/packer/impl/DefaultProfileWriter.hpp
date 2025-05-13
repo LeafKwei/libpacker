@@ -10,9 +10,8 @@ PACKER_BEGIN
 class DefaultProfileWriter : public VProfileWriter{
 public:
     DefaultProfileWriter(const std::string &path) ;
-    void initialize() override;
     void write(const Profile &profile) override;
-    void finalize() override;
+    ~DefaultProfileWriter();
 
 private:
     FilePtr m_file;

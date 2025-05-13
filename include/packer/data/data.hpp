@@ -8,6 +8,12 @@
 PACKER_BEGIN
 class VImage;
 
+enum class Indicator{
+    RD_OK,
+    RD_EOF,
+    RD_INCOMPLETE
+};
+
 struct Point{
     int x;
     int y;

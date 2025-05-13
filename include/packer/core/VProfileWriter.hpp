@@ -6,9 +6,7 @@ PACKER_BEGIN
 
 class VProfileWriter{
 public:
-    virtual void initialize() =0;
     virtual void write(const Profile &profile) =0;
-    virtual void finalize() =0;
     virtual ~VProfileWriter();
 };
 
