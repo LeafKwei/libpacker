@@ -10,7 +10,7 @@ class VPacker{
 public:
     virtual void addImageReader(VImageReader *imgReader) =0;
     virtual void pack() =0;
-    virtual void save(const VImageWriter &imgWriter, const VProfileWriter &prfWriter) =0;
+    virtual void save(VImageWriter &imgWriter, VProfileWriter &prfWriter) =0;
     virtual ~VPacker();
 };
 

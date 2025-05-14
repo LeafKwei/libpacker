@@ -9,7 +9,7 @@ void printRect(const Rect &r){
 }
 
 void printLayouter(const packer::VLayouter &layouter){
-    printf("W: %d, H: %d\n", layouter.packedImageWidth(), layouter.packedImageHeight());
+    printf("W: %d, H: %d\n", layouter.packedWidth(), layouter.packedHeight());
 }
 
 int main(void){

@@ -75,12 +75,30 @@ Rect ScaledLayouter::calcRange(int scaledWidth, int scaledHeight){
     return range;
 }
 
-int ScaledLayouter::packedImageWidth() const{
-    return scale(m_layouterWidth);
+int ScaledLayouter::packedWidth() const{
+    int width = m_layouterWidth;
+    for(int x = m_layouterWidth - 1; x >= 0; x--){
+        for(int y = 0; y < m_layouterHeight; y++){
+            if(m_note.test(transDimension(x, y))){
+                return scale(width);
+            }
+        }
+        --width;
+    }
+
+    return scale(width);
 }
 
-int ScaledLayouter::packedImageHeight() const{
-    return scale(m_layouterHeight);
+int ScaledLayouter::packedHeight() const{
+    int height = m_layouterHeight;
+    for(int y = m_layouterHeight - 1; y >= 0; y--){
+        if(m_note.testOR(transDimension(0, y), m_layouterWidth)){
+            break;
+        }
+        --height;
+    }
+
+    return scale(height);
 }
 
 inline int ScaledLayouter::scale(int value) const{
@@ -137,7 +155,7 @@ void ScaledLayouter::expandHeight(int increment){
     m_layouterHeight += increment;
  }
 
-int ScaledLayouter::transDimension(int x, int y){
+int ScaledLayouter::transDimension(int x, int y) const{
     if(isBadCoord(x, y, m_layouterWidth, m_layouterHeight)) throw logic_error("Invalid position.");
     return y * m_layouterWidth + x;
 }

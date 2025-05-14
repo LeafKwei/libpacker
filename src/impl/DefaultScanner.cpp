@@ -10,7 +10,7 @@ DefaultScanner::~DefaultScanner(){
 
 }
 
-bool DefaultScanner::scan(const VImage &img, Rect &result) {
+void DefaultScanner::scan(const VImage &img, Rect &result) {
     /* 从上到下找到首个非透明像素的坐标 */
     int x1 = -1, y1 = -1;
     for(int y = 0; y < img.height(); y++){
@@ -24,7 +24,9 @@ bool DefaultScanner::scan(const VImage &img, Rect &result) {
 
     /* 如果没有找到任何非透明像素，则说明此图片无有效内容 */
     if(x1 == -1 || y1 == -1){
-        return false;
+        result.width = 0;
+        result.height = 0;
+        return;
     }
 
     /* 从下到上找到首个非透明像素的坐标 */
@@ -65,8 +67,6 @@ bool DefaultScanner::scan(const VImage &img, Rect &result) {
     result.y = y1;
     result.width = x4 - x3 + 1;
     result.height = y2 - y1 + 1;
-
-    return true;
 }
 
 PACKER_END

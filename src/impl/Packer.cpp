@@ -1,0 +1,121 @@
+#include <iostream>
+#include <stdexcept>
+#include "packer/impl/Packer.hpp"
+#include "packer/impl/Image.hpp"
+#include "packer/impl/DefaultScanner.hpp"
+#include "packer/impl/ScaledLayouter.hpp"
+
+using std::logic_error;
+using std::runtime_error;
+using std::cerr;
+using std::endl;
+using std::string;
+PACKER_BEGIN
+
+Packer::Packer(int expectedWidth) : m_state(State::PK_EMPTY), m_expectedWidth(expectedWidth) {}
+Packer::~Packer(){
+    if(m_image != nullptr) {
+        delete m_image;
+        m_image = nullptr;
+    }
+
+    for(auto &rc : m_records){
+        if(rc.imgptr != nullptr) delete rc.imgptr;
+    }
+
+    for(auto reader : m_readers){
+        if(reader != nullptr) delete reader;
+    }
+}
+
+void Packer::addImageReader(VImageReader *imgReader){
+    if(imgReader == nullptr) throw logic_error("Image reader can't be nullptr.");
+    m_readers.push_back(imgReader);
+}
+
+void Packer::pack(){
+    if(m_state == State::PK_PACKED) throw logic_error("Can't pack repeatly.");
+    try{
+        readImage();
+        scanImage();
+        layImage();
+        packImage();
+        m_state = State::PK_PACKED;
+    }
+    catch(logic_error &err){
+        throw logic_error(string("Failed: ") + err.what());
+    }
+    catch(runtime_error &err){
+        throw logic_error(string("*Failed: ") + err.what());
+    }
+}
+
+void Packer::save(VImageWriter &imgWriter, VProfileWriter &prfWriter){
+    if(m_state != State::PK_PACKED) throw logic_error("Operation `save' can be used only after pack.");
+
+    for(auto &rc : m_records){
+        if(!rc) continue;
+        prfWriter.write(rc.profile);
+    }
+
+    imgWriter.write(*m_image);
+}
+
+void Packer::readImage(){
+    for(auto &reader : m_readers){
+        Record record;
+        record.imgptr = reader -> read();
+        record.profile.id = reader -> id();
+        m_records.push_back(record);
+    }
+}
+
+void Packer::scanImage(){
+    DefaultScanner scanner;
+
+    for(auto &rc : m_records){
+        Rect tmp;
+        scanner.scan(*(rc.imgptr), tmp);
+        rc.profile.srcRange = tmp;
+    }
+}
+
+void Packer::layImage(){
+    auto beg = m_records.begin();
+    auto end = m_records.end();
+    ScaledLayouter layouter(16, m_expectedWidth, (int)(1.5 * m_expectedWidth));
+
+    for(auto &rc : m_records){
+        Rect tmp;
+        Rect &src = rc.profile.srcRange;
+        Rect &dst = rc.profile.dstRange;
+
+        if(!src) continue;
+        tmp = layouter.laydown(src.width, src.height);
+        dst = tmp;
+    }
+
+    m_packedWidth = layouter.packedWidth();
+    m_packedHeight = layouter.packedHeight();
+}
+
+void Packer::packImage(){
+    VImage *image = new Image(m_packedWidth, m_packedHeight);
+    if(image == nullptr) throw runtime_error("Out of memory.");
+
+    for(auto &rc : m_records){
+        Rect &src = rc.profile.srcRange;
+        Rect &dst = rc.profile.dstRange;
+
+        if(!rc){
+            cerr << "Ignore an image: " << rc.profile.id << ", because it may be an empty image.";
+            continue;
+        }
+
+        image -> placeRect(dst.x, dst.y, *(rc.imgptr), src);
+    }
+
+    m_image = image;
+}
+
+PACKER_END

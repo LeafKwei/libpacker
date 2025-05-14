@@ -10,8 +10,8 @@ class ScaledLayouter : public VLayouter{
 public:
     ScaledLayouter(int scale, int layouterWidth, int layouterHeight);
     Rect laydown(int imageWidth, int imageHeight) override;
-    int packedImageWidth() const override;
-    int packedImageHeight() const override;
+    int packedWidth() const override;
+    int packedHeight() const override;
 
 private:
     int m_scale;
@@ -29,7 +29,7 @@ private:
     void rangedSetAt(const Rect &rect);
     void rangedUnsetAt(const Rect &rect);
     void expandHeight(int increment);
-    int transDimension(int x, int y);
+    int transDimension(int x, int y) const;
     Rect calcRange(int scaledWidth, int scaledHeight);
 };
 

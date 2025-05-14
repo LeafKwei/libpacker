@@ -11,7 +11,7 @@ class DefaultScanner : public VScanner{
 public:
     DefaultScanner();
     ~DefaultScanner() override;
-    bool scan(const VImage &img, Rect &result) override;
+    void scan(const VImage &img, Rect &result) override;
 };
 
 PACKER_END

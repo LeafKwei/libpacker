@@ -7,15 +7,25 @@ PACKER_BEGIN
 
 class Packer : public VPacker{
 public:
+    Packer(int expectedWidth=680);
     void addImageReader(VImageReader *imgReader) override;
     void pack() override;
-    void save(const VImageWriter &imgWriter, const VProfileWriter &prfWriter) override;
+    void save(VImageWriter &imgWriter, VProfileWriter &prfWriter) override;
     ~Packer();
 
 private:
     State m_state;
+    int m_expectedWidth;
+    int m_packedWidth;
+    int m_packedHeight;
+    VImage *m_image;
     std::vector<VImageReader*> m_readers;
     std::vector<Record> m_records;
+
+    void readImage();
+    void scanImage();
+    void layImage();
+    void packImage();
 };
 
 PACKER_END

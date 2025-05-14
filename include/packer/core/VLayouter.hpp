@@ -9,8 +9,8 @@ PACKER_BEGIN
 class VLayouter{
 public:
     virtual Rect laydown(int imageWidth, int imageHeight) =0;
-    virtual int packedImageWidth() const =0;
-    virtual int packedImageHeight() const =0;
+    virtual int packedWidth() const =0;
+    virtual int packedHeight() const =0;
     virtual ~VLayouter();
 };
 

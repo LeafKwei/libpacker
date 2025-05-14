@@ -55,7 +55,7 @@ bool Bitmap::test(int pos) const{
     return (tmp >> (pos % 8)) & 1;
 }
 
-bool Bitmap::testAND(int pos, int len){
+bool Bitmap::testAND(int pos, int len) const{
     int result = 1;
     int maxIdx = (pos + len - 1) / 8;
     if(isBadIdx(maxIdx)) throw logic_error("Invalid postion or length.");
@@ -69,7 +69,7 @@ bool Bitmap::testAND(int pos, int len){
     return result;
 }
 
-bool Bitmap::testOR(int pos, int len){
+bool Bitmap::testOR(int pos, int len) const{
      int result = 0;
     int maxIdx = (pos + len - 1) / 8;
     if(isBadIdx(maxIdx)) throw logic_error("Invalid postion or length.");
