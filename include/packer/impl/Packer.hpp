@@ -7,7 +7,7 @@ PACKER_BEGIN
 
 class Packer : public VPacker{
 public:
-    Packer(int expectedWidth=680);
+    Packer(int scale=16, int scaledWidth=40);
     void addImageReader(VImageReader *imgReader) override;
     void pack() override;
     void save(VImageWriter &imgWriter, VProfileWriter &prfWriter) override;
@@ -15,7 +15,8 @@ public:
 
 private:
     State m_state;
-    int m_expectedWidth;
+    int m_scale;
+    int m_scaledWidth;
     int m_packedWidth;
     int m_packedHeight;
     VImage *m_image;

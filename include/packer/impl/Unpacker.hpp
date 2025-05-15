@@ -2,12 +2,13 @@
 #define PACKER_UNPACKER_HPP
 
 #include <vector>
+#include <map>
 #include "packer/core/VUnpakcer.hpp"
 PACKER_BEGIN
 
 class Unpacker : public VUnpacker{
 public:
-    void setSource(VImageReader *imgReader, VProfileReader *prfReader) override;
+    Unpacker(VImageReader *imgReader, VProfileReader *prfReader);
     void unpack() override;
     VImage* getImageById(const std::string &id) override;
     std::vector<std::string> idList() override;
@@ -15,7 +16,13 @@ public:
 
 private:
     State m_state;
-    std::vector<Record> m_records;
+    VImage *m_image;
+    std::map<string, Profile> m_profiles;
+    VImageReader *m_imgReader;
+    VProfileReader *m_prfReader;
+
+    void readProfiles();
+    VImage *dumpImage(const Profile &prf);
 };
 
 PACKER_END

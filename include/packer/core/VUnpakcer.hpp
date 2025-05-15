@@ -10,7 +10,6 @@ PACKER_BEGIN
 
 class VUnpacker{
 public:
-    virtual void setSource(VImageReader *imgReader, VProfileReader *prfReader) =0;
     virtual void unpack() =0;
     virtual VImage* getImageById(const std::string &id) =0;
     virtual std::vector<std::string> idList() =0;

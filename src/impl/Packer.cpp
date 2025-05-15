@@ -12,7 +12,12 @@ using std::endl;
 using std::string;
 PACKER_BEGIN
 
-Packer::Packer(int expectedWidth) : m_state(State::PK_EMPTY), m_expectedWidth(expectedWidth) {}
+Packer::Packer(int scale, int scaledWidth) : m_state(State::PK_EMPTY) {
+    if(scale <= 0 || scaledWidth <= 0) throw logic_error("Invalid scale or scaled width.");
+    m_scale = scale;
+    m_scaledWidth = scaledWidth;
+}
+
 Packer::~Packer(){
     if(m_image != nullptr) {
         delete m_image;
@@ -29,12 +34,12 @@ Packer::~Packer(){
 }
 
 void Packer::addImageReader(VImageReader *imgReader){
-    if(imgReader == nullptr) throw logic_error("Image reader can't be nullptr.");
+    if(imgReader == nullptr) throw logic_error("Image reader can not be nullptr.");
     m_readers.push_back(imgReader);
 }
 
 void Packer::pack(){
-    if(m_state == State::PK_PACKED) throw logic_error("Can't pack repeatly.");
+    if(m_state == State::PK_PACKED) throw logic_error("Can not pack repeatly.");
     try{
         readImage();
         scanImage();
@@ -83,7 +88,7 @@ void Packer::scanImage(){
 void Packer::layImage(){
     auto beg = m_records.begin();
     auto end = m_records.end();
-    ScaledLayouter layouter(16, m_expectedWidth, (int)(1.5 * m_expectedWidth));
+    ScaledLayouter layouter(m_scale, m_scaledWidth, (int)(1.5 * m_scaledWidth));
 
     for(auto &rc : m_records){
         Rect tmp;
