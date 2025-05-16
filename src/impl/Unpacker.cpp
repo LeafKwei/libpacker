@@ -15,7 +15,7 @@ using std::endl;
 using std::make_pair;
 PACKER_BEGIN
 
-Unpacker::Unpacker(VImageReader *imgReader, VProfileReader *prfReader) : m_state(State::UPK_NOSRC) {
+Unpacker::Unpacker(VImageReader *imgReader, VProfileReader *prfReader) : m_state(State::UPK_NOP) {
     if(imgReader == nullptr || prfReader == nullptr) throw logic_error("Reader should not be nullptr.");
     m_imgReader = imgReader;
     m_prfReader = prfReader;

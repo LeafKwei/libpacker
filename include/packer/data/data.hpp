@@ -9,16 +9,16 @@ PACKER_BEGIN
 class VImage;
 
 enum class State{
-    PK_EMPTY,
-    PK_PACKED,
-    UPK_NOSRC,
-    UPK_UNPACKED
+    PK_EMPTY,             //Packer内没有添加任何reader(初始状态)
+    PK_PACKED,           //Packer已执行过打包操作
+    UPK_NOP,              //Unpacker未执行任何操作(初始状态)
+    UPK_UNPACKED   //Unpacker已执行过解包操作
 };
 
 enum class Indicator{
-    RD_OK,
-    RD_EOF,
-    RD_INCOMPLETE
+    RD_OK,                     //读取成功
+    RD_EOF,                    //已到达文件末尾
+    RD_INCOMPLETE     //信息不完整(例如字段缺失或者该文本是一个空行)
 };
 
 struct Point{

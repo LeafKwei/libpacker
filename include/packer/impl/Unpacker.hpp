@@ -7,6 +7,10 @@
 #include "packer/core/VUnpakcer.hpp"
 PACKER_BEGIN
 
+/**
+ * Unpacker根据构造函数传入的ImageReader和ProfileReader来读取待解包的图片以及子图片的位置信息，
+ * 用户需要确保ImageReader和ProfileReader都是从堆内存中分配的，Unpacker会负责delete两者
+ */
 class Unpacker : public VUnpacker{
 public:
     Unpacker(VImageReader *imgReader, VProfileReader *prfReader);

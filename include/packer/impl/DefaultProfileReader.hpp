@@ -7,6 +7,7 @@
 #include "packer/raii/FilePtr.hpp"
 PACKER_BEGIN
 
+/* 基于C标准库IO函数实现的'.prf'文件的读取功能 */
 class DefaultProfileReader : public VProfileReader{
 public:
     DefaultProfileReader(const std::string &path);

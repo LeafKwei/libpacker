@@ -5,6 +5,7 @@
 #include "packer/packer.hpp"
 PACKER_BEGIN
 
+/* 对标准库FILE*类型的RAII封装 */
 class FilePtr{
 public:
     FilePtr();

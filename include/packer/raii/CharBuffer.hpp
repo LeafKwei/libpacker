@@ -4,6 +4,7 @@
 #include "packer/packer.hpp"
 PACKER_BEGIN
 
+/* 对char类型的内存缓冲区的RAII封装 */
 class CharBuffer{
 public:
     CharBuffer();

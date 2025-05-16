@@ -37,6 +37,11 @@ Rect ScaledLayouter::scaledLaydown(int scaledWidth, int scaledHeight){
     if(scaledWidth > m_layouterWidth) throw logic_error("Image width after scale must less than layouter width.");
    
     while(true){
+        /**
+         * 假设布局器的宽高为6x6，而scaledWidth和scaledHeight为3x3，那我们实际需要遍历的范围就只有4x4，因为超出4x4
+         * 范围外的坐标的加上scaledWidth和scaledHeight已经超出了布局器的范围，而calcRange正是用于计算我们需要遍历的
+         * 范围
+         */
         Rect range = calcRange(scaledWidth, scaledHeight);
         if(!range) {
             expandHeight(scaledHeight - m_layouterHeight);
@@ -45,6 +50,10 @@ Rect ScaledLayouter::scaledLaydown(int scaledWidth, int scaledHeight){
 
         Rect result;
 
+        /**
+         * 遍历矩形范围内的每个点，并根据点的坐标和图片宽高生成一个矩形范围，然后检查矩形是否已被占用(即其中是否有bit为1)，
+         * 当找到一个未被占用的矩形时，将矩形中的所有bit置1，然后返回矩形作为结果
+         */ 
         for(int y = range.y; y < range.y + range.height; y++){
             for(int x = range.x; x < range.x + range.width; x++){
                 result.x = x;
@@ -75,6 +84,11 @@ Rect ScaledLayouter::calcRange(int scaledWidth, int scaledHeight){
     return range;
 }
 
+/**
+ * 由于缩放和扩展高度的缘故，布局器的宽度和高度可能比实际使用到的要更大，因此packedWidth和packedHeight函数在返回宽度
+ * 和高度前还需要减去那些多余的量。计算这些多余的量的方法是从下到上(计算高度)或从右到左(计算宽度)依次test每行/列，如果该行/列
+ * 不存在为1的bit，那么就说明该行/列未实际使用，需要减去
+ */
 int ScaledLayouter::packedWidth() const{
     int width = m_layouterWidth;
     for(int x = m_layouterWidth - 1; x >= 0; x--){

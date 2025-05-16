@@ -5,6 +5,10 @@
 #include "packer/core/VImage.hpp"
 PACKER_BEGIN
 
+/**
+ * Image是对VImage的一种实现，主要作用是创建一个指定宽高的空白图片，也就相当于提前分配一片RGBA结构体组成的内存，
+ * 再由ImageReader等向其中填充像素数据
+ */
 class Image : public VImage{
 public:
     Image(int width, int height);

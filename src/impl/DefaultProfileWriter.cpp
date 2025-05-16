@@ -11,6 +11,11 @@ PACKER_BEGIN
 DefaultProfileWriter::DefaultProfileWriter(const std::string &path) : m_fileName(path), m_file(path.c_str(), "w"), m_buffer(1024){}
 DefaultProfileWriter::~DefaultProfileWriter(){}
 
+/**
+ * 每次调用write时写入一个Profile，write函数会先将Profile转换为一行文本，然后再写入到文件中
+ * 
+ * 文件的打开和关闭由FilePtr的RAII机制完成
+ */
 void DefaultProfileWriter::write(const Profile &profile){
     memset(m_buffer.use(), 0, 1024);
     sprintf(m_buffer.use(), "%s : (%d,%d,%d,%d),(%d,%d,%d,%d),%d\n", profile.id.c_str(), 

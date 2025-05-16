@@ -5,12 +5,15 @@
 #include "packer/data/data.hpp"
 PACKER_BEGIN
 
-/* Layouter计算指定宽高的图片在最终合并的png文件中的布局位置 */
+/**
+ *  VLayouter是一个布局管理器，它的作用是计算一个指定宽高的图片在最后合并得到的图片中的位置。
+ *  VLayouter还需要提供可以获取最后合并的图片的宽高的接口
+ */
 class VLayouter{
 public:
-    virtual Rect laydown(int imageWidth, int imageHeight) =0;
-    virtual int packedWidth() const =0;
-    virtual int packedHeight() const =0;
+    virtual Rect laydown(int imageWidth, int imageHeight) =0;  //计算指定宽高的图片在最终合并得到的图片中的位置
+    virtual int packedWidth() const =0;   //获取最终合并得到的图片所需的宽度
+    virtual int packedHeight() const =0;  //获取最终合并得到的图片所需的高度
     virtual ~VLayouter();
 };
 

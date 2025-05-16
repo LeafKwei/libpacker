@@ -4,6 +4,10 @@
 #include "packer/core/VImageWriter.hpp"
 PACKER_BEGIN
 
+/**
+ * ImageWriter实现了write函数，相比于ImageReader，它的实现要简单许多，它只是按序调用initialize，
+ * writeAllRGB和finalize
+ */
 class ImageWriter : public VImageWriter{
 public:
     void write(VImage &img) override;

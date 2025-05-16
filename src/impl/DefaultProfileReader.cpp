@@ -13,6 +13,12 @@ PACKER_BEGIN
 DefaultProfileReader::DefaultProfileReader(const std::string &path) : m_fileName(path), m_file(path.c_str(), "r"), m_buffer(1024){}
 DefaultProfileReader::~DefaultProfileReader(){}
 
+/**
+ * 每调用一次read函数就从文件中读取一行文本，然后将文本解析为一个Profile，当读取到文件末尾时返回RD_EOF，
+ * 如果解析得到的Profile有缺失(比如文本行是空行)，则返回RD_RD_INCOMPLETE，反之返回RD_OK
+ * 
+ * 文件的打开和关闭由FilePtr的RAII机制完成
+ */
 Indicator DefaultProfileReader::read(Profile &profile){
     int eop = 0;
     CharBuffer idBuffer(1024);
