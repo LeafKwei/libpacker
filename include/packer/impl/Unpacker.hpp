@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <map>
+#include <string>
 #include "packer/core/VUnpakcer.hpp"
 PACKER_BEGIN
 
@@ -17,7 +18,7 @@ public:
 private:
     State m_state;
     VImage *m_image;
-    std::map<string, Profile> m_profiles;
+    std::map<std::string, Profile> m_profiles;
     VImageReader *m_imgReader;
     VProfileReader *m_prfReader;
 

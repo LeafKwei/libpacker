@@ -53,7 +53,7 @@ RGBA* Image::accessAll(){
 
 void Image::createBuffer(int width, int height){
     if(width < 0 || height < 0) throw logic_error("Invalid size.");
-    m_data = (RGBA*) malloc(sizeof(RGBA) * width * height);
+    m_data = (RGBA*) calloc(width * height, sizeof(RGBA));
     if(m_data == NULL) throw std::runtime_error("Out of memory.");
 }
 

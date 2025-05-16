@@ -1,8 +1,10 @@
 #include <stdexcept>
 #include "packer/impl/Image.hpp"
 #include "packer/impl/ImageReader.hpp"
+
 using std::logic_error;
 using std::runtime_error;
+using std::string;
 PACKER_BEGIN
 
 VImage* ImageReader::read(){
@@ -13,7 +15,7 @@ VImage* ImageReader::read(){
     VImage *img = new Image(width, height);
     if(img == nullptr) throw runtime_error("Out of memery.");
 
-    readRGB(img->accessAll());
+    readAllRGB(img->accessAll());
     finalize();
 
     return img;

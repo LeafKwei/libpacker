@@ -113,7 +113,7 @@ void Packer::packImage(){
         Rect &dst = rc.profile.dstRange;
 
         if(!rc){
-            cerr << "Ignore an image: " << rc.profile.id << ", because it may be an empty image.";
+            cerr << "Ignore an image: " << rc.profile.id << ", because it may be an empty image." << endl;
             continue;
         }
 

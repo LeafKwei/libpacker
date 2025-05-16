@@ -166,31 +166,30 @@ private:
     string path;
 };
 
-int main(void){
-#if 0
-    Packer packer(16, 30);
-    FileImageWriter fwriter("output.txt");
-    DefaultProfileWriter pwriter("output.prf");
+int main(int argc, char *argv[]){
+    if(argc == 1 || strcmp(argv[1], "pack") == 0){
+        Packer packer(16, 30);
+        FileImageWriter fwriter("output.txt");
+        DefaultProfileWriter pwriter("output.prf");
 
-    packer.addImageReader(new NoSrcImageReader());
-    packer.addImageReader(new NoSrcImageReader());
-    packer.addImageReader(new NoSrcImageReader());
-    packer.addImageReader(new NoSrcImageReader());
+        packer.addImageReader(new NoSrcImageReader());
+        packer.addImageReader(new NoSrcImageReader());
+        packer.addImageReader(new NoSrcImageReader());
+        packer.addImageReader(new NoSrcImageReader());
 
-    packer.pack();
-    packer.save(fwriter, pwriter);
-#endif
-
-#if 1
-    Unpacker unpacker(new FileImageReader("output.txt"), new DefaultProfileReader("output.prf"));
-    unpacker.unpack();
-    std::vector<string> idvec = unpacker.idList();
-
-    for(auto &id : idvec){
-        VImage *img = unpacker.getImageById(id);
-        FileImageWriter fwriter((id + ".txt").c_str());
-        fwriter.write(*img);
-        delete img;
+        packer.pack();
+        packer.save(fwriter, pwriter);
     }
-#endif
+    else{
+        Unpacker unpacker(new FileImageReader("output.txt"), new DefaultProfileReader("output.prf"));
+        unpacker.unpack();
+        std::vector<string> idvec = unpacker.idList();
+
+        for(auto &id : idvec){
+            VImage *img = unpacker.getImageById(id);
+            FileImageWriter fwriter((id + ".txt").c_str());
+            fwriter.write(*img);
+            delete img;
+        }
+    }
 }

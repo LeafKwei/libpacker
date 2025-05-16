@@ -3,8 +3,8 @@ PACKER_BEGIN
 
 void ImageWriter::write(VImage &img){
     initialize(img.width(), img.height());
-    writeRGB(img.accessAll());
+    writeAllRGB(img.accessAll());
     finalize();
-}  
+}
 
 PACKER_END

@@ -85,9 +85,16 @@ void Unpacker::readProfiles(){
 }
 
 VImage* Unpacker::dumpImage(const Profile &prf){
-    VImage *img = new Image(prf.dstRange.width, prf.dstRange.height);
+    VImage *img = new Image(prf.srcRange.width, prf.srcRange.height);
     if(img == nullptr) throw runtime_error("Out of memory.");
-    img -> placeRect(0, 0, *m_image, prf.dstRange);
+    
+    Rect realRange;
+    realRange.x = prf.dstRange.x;
+    realRange.y = prf.dstRange.y;
+    realRange.width = prf.srcRange.width;
+    realRange.height = prf.srcRange.height;
+    img -> placeRect(0, 0, *m_image, realRange);
+    return img;
 }
 
 PACKER_END
