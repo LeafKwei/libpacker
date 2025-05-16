@@ -19,17 +19,14 @@ Packer::Packer(int scale, int scaledWidth) : m_state(State::PK_EMPTY) {
 }
 
 Packer::~Packer(){
-    if(m_image != nullptr) {
-        delete m_image;
-        m_image = nullptr;
-    }
+    delete m_image;
 
     for(auto &rc : m_records){
-        if(rc.imgptr != nullptr) delete rc.imgptr;
+        delete rc.imgptr;
     }
 
     for(auto reader : m_readers){
-        if(reader != nullptr) delete reader;
+        delete reader;
     }
 }
 
@@ -57,13 +54,20 @@ void Packer::pack(){
 
 void Packer::save(VImageWriter &imgWriter, VProfileWriter &prfWriter){
     if(m_state != State::PK_PACKED) throw logic_error("Operation `save' can be used only after pack.");
+    try{
+        for(auto &rc : m_records){
+            if(!rc) continue;
+            prfWriter.write(rc.profile);
+        }
 
-    for(auto &rc : m_records){
-        if(!rc) continue;
-        prfWriter.write(rc.profile);
+        imgWriter.write(*m_image);
     }
-
-    imgWriter.write(*m_image);
+    catch(logic_error &err){
+        throw logic_error(string("Failed: ") + err.what());
+    }
+    catch(runtime_error &err){
+        throw logic_error(string("*Failed: ") + err.what());
+    }
 }
 
 void Packer::readImage(){

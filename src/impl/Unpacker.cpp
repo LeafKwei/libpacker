@@ -22,7 +22,7 @@ Unpacker::Unpacker(VImageReader *imgReader, VProfileReader *prfReader) : m_state
 }
 
 Unpacker::~Unpacker(){
-    if(m_image != nullptr) delete m_image;
+    delete m_image;
     delete m_imgReader;
     delete m_prfReader;
 }
