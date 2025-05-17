@@ -12,7 +12,7 @@ using std::endl;
 using std::string;
 PACKER_BEGIN
 
-Packer::Packer(int scale, int scaledWidth) : m_state(State::PK_EMPTY) {
+Packer::Packer(int scale, int scaledWidth) : m_state(State::PK_EMPTY), m_image(nullptr) {
     if(scale <= 0 || scaledWidth <= 0) throw logic_error("Invalid scale or scaled width.");
     m_scale = scale;
     m_scaledWidth = scaledWidth;
