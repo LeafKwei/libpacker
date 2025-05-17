@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.20)
+project(libpacker)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/static)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/shared)
+add_subdirectory(src)
