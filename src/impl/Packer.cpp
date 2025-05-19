@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stdexcept>
+#include <algorithm>
 #include "packer/impl/Packer.hpp"
 #include "packer/impl/Image.hpp"
 #include "packer/impl/DefaultScanner.hpp"
@@ -93,6 +94,13 @@ void Packer::layImage(){
     auto beg = m_records.begin();
     auto end = m_records.end();
     ScaledLayouter layouter(m_scale, m_scaledWidth, (int)(1.5 * m_scaledWidth));
+
+    //将vector中的Record按图片大小升序排序
+    std::sort(m_records.begin(), m_records.end(), [](const Record &r1, const Record &r2) -> bool{
+        int area1 = r1.profile.srcRange.width * r1.profile.srcRange.height;
+        int area2 = r2.profile.srcRange.width * r2.profile.srcRange.height;
+        return area1 < area2;
+    });
 
     for(auto &rc : m_records){
         Rect tmp;

@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <ctime>
 #include "packer/impl/Packer.hpp"
 #include "packer/impl/Unpacker.hpp"
 #include "packer/impl/ImageReader.hpp"
@@ -18,6 +19,7 @@ public:
         buf[0] = '@';
         buf[1] = '$';
         buf[2] = '&';
+        srand(time(NULL));
     }
 
     std::string id() override{

@@ -118,7 +118,7 @@ private:
 
 
 
-## 5.2实现ImageWriter
+## 5.2.实现ImageWriter
 
 ImageWriter的功能与ImageReader基本对称，我们首先需要使用一个类继承ImageWriter，然后实现initialize、writeAllRGB、finalize函数：
 
@@ -212,8 +212,8 @@ using packer::DefaultProfileReader;
 
 void doUnpack(){
 	//Unpacker析构时会负责删除reader，所以直接从堆上分配即可
-	Unpacker unpacker(new MyImageReader("total.png"), new DefaultProfileReader("total.prf"));
-	unpacker.unpack(); //解包
+   	Unpacker unpacker(new MyImageReader("total.png"), new DefaultProfileReader("total.prf"));
+   	unpacker.unpack(); //解包
     VImage *img = unpacker.getImageById("a.png"); //使用前文中的id来获取图片，用户需要负责删除VImage对象
     
     /* 使用VImage对象 */
