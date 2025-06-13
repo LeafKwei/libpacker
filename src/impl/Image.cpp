@@ -47,7 +47,8 @@ estruct Image::placeRect(int x, int y, const VImage &src, const Rect &rect) noex
     for(int vy = 0; vy < rect.height; vy++){
         for(int vx = 0; vx < rect.width; vx++){
             int pos = ((y + vy) * m_width) + (x + vx);
-            auto [err, rgb] = src.access(rect.x + vx, rect.y + vy);  //经过上方的坐标检查后，此处应该不会发生错误，因此不考虑错误检查
+            auto [err, rgb] = src.access(rect.x + vx, rect.y + vy);
+            if(err.code != ErrCode::OK) return err;
             m_data[pos] = rgb;
         }
     }

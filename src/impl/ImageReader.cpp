@@ -7,18 +7,40 @@ using std::runtime_error;
 using std::string;
 PACKER_BEGIN
 
-VImage* ImageReader::read(){
+EVImagePtr ImageReader::read() noexcept{
     int width, height;
-    initialize(width, height);
-    if(width <=0 || height <= 0) throw logic_error("Size must be a positive number.");
 
-    VImage *img = new Image(width, height);
-    if(img == nullptr) throw runtime_error("Out of memery.");
+    auto err = beforeRead(width, height);
+    if(err) return make_evalue(err.code, err.what, nullptr);
+    if(width <= 0 || height <= 0) return make_evalue(ErrCode::InvalidNumber, "Image size must be a positive number.", nullptr);
 
-    readAllRGB(img->accessAll());
-    finalize();
+    VImage *imgptr = new Image(width, height);
+    if(imgptr == nullptr) return make_evalue(ErrCode::OutOfMem, "No memory.", nullptr);
 
-    return img;
+    auto [err, rgbaptr] = imgptr -> accessAll();
+    if(err) {
+        delete imgptr;
+        return make_evalue(err.code, err.what, nullptr);
+    }
+
+    for(int y = 0; y < height; y++){
+        for(int x = 0; x < width; x++){
+            RGBA &rgba = rgbaptr[y * width + x];
+            auto err = readRGB(x, y, rgba);
+            if(err.code != ErrCode::OK){ 
+                delete imgptr;
+                return make_evalue(err.code, err.what, nullptr);
+            }
+        }
+    }
+
+    auto err = afterRead();
+    if(err){
+        delete imgptr;
+        return make_evalue(err.code, err.what, nullptr);
+    }
+
+    return make_evalue_ok(imgptr);
 }
 
 PACKER_END

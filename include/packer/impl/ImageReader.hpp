@@ -13,12 +13,12 @@ PACKER_BEGIN
  */
 class ImageReader : public VImageReader{
 public:
-    VImage* read() override;
+    EVImagePtr read() noexcept override;
 
 protected:
-    virtual void initialize(int &width, int &height) =0;              //进行像素拷贝前的初始化，例如打开图片
-    virtual void readAllRGB(RGBA *buffer) =0;                          //将原图片中的所有像素值保存RGBA结构体中               
-    virtual void finalize() =0;                                                     //完成像素拷贝后的清理操作，例如关闭图片
+    virtual estruct beforeRead(int &width, int &height) noexcept;
+    inline virtual estruct readRGB(int x, int y, RGBA &rgba) noexcept;
+    virtual estruct afterRead() noexcept;
 };
 
 PACKER_END
