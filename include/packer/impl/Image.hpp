@@ -13,19 +13,19 @@ class Image : public VImage{
 public:
     Image(int width, int height);
     ~Image();
-    int width() const override;
-    int height() const override;
-    RGBA access(int x, int y) const override;
-    void place(int x, int y, const RGBA &rgb) override;
-    void placeRect(int x, int y, const VImage &src, const Rect &rect) override;
-    RGBA* accessAll() override;
+    int width() const noexcept override;
+    int height() const noexcept override;
+    ERGBA access(int x, int y) const noexcept override;
+    ERGBAPtr accessAll() noexcept override;
+    estruct place(int x, int y, const RGBA &rgb) noexcept override;
+    estruct placeRect(int x, int y, const VImage &src, const Rect &rect) noexcept override;
 
 private:
     int m_width;
     int m_height;
     RGBA *m_data;
 
-    void createBuffer(int width, int height);
+    estruct createBuffer(int width, int height) noexcept;
 };
 
 PACKER_END

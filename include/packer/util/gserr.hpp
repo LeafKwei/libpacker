@@ -13,7 +13,8 @@ PACKER_BEGIN
 enum class ErrCode{
     OK = 0,
     OutOfMem,
-    OutOfBound
+    OutOfBound,
+    InvalidNumber
 };
 
 struct Err_Struct{
@@ -29,10 +30,14 @@ struct Err_Struct{
         unsigned int row=0
     );
 
+    Err_Struct(const Err_Struct &oth);
+
     operator std::string() const;
+    operator bool() const;
 };
 
 //============ Type Alias =================
+using estruct           = Err_Struct;
 using ebool             = std::tuple<Err_Struct, bool>;
 using echar             = std::tuple<Err_Struct, char>;
 using eshort            = std::tuple<Err_Struct, short>;
@@ -53,6 +58,8 @@ PACKER_END
 //============ Predefined =================
 #define make_evalue(code, what, value) {{code, what, __FILE__, __LINE__}, value}
 #define make_evalue_ok(value) make_evalue(ErrCode::OK, "", value)
+#define make_estruct(code, what) {code, what, __FILE__, __LINE__}
+#define make_estruct_ok() make_estruct(ErrCode::OK, "")
 
 //============ Overload =================
 std::ostream &operator<<(std::ostream &os, const packer::Err_Struct &err);

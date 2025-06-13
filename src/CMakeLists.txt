@@ -22,6 +22,7 @@ set(SOURCE_LIST
     raii/CharBuffer.cpp
     raii/FilePtr.cpp
     util/Bitmap.cpp
+	util/gserr.cpp
 )
 
 include_directories(${INCLUDE_DIR})

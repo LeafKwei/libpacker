@@ -8,7 +8,11 @@ using std::runtime_error;
 PACKER_BEGIN
 
 Image::Image(int width, int height) : m_width(0), m_height(0), m_data(NULL){
-    createBuffer(width, height);
+    auto err = createBuffer(width, height);
+    if(err){
+        throw runtime_error(err);
+    }
+
     m_width = width;
     m_height = height;
 }
@@ -17,44 +21,55 @@ Image::~Image(){
     free(m_data);
 }
 
-int Image::width() const{
+int Image::width() const noexcept{
     return m_width;
 }
 
-int Image::height() const{
+int Image::height() const noexcept{
     return m_height;
 }
 
-RGBA Image::access(int x, int y) const{
-    if(isBadCoord(x, y, m_width, m_height)) throw logic_error("Invalid position.");
-    return m_data[y * m_width + x];
+ERGBA Image::access(int x, int y) const noexcept{
+    if(isBadCoord(x, y, m_width, m_height)) return make_evalue(ErrCode::InvalidNumber, "Coords should be in range of image size.", RGBA());
+    return make_evalue_ok(m_data[y * m_width + x]);
 }
 
-void Image::place(int x, int y, const RGBA &rgb){
-    if(isBadCoord(x, y, m_width, m_height)) throw logic_error("Invalid position.");
+estruct Image::place(int x, int y, const RGBA &rgb) noexcept{
+    if(isBadCoord(x, y, m_width, m_height)) return make_estruct(ErrCode::InvalidNumber, "Coords should be in range of image size.");
     m_data[y * m_width + x] = rgb;
+    return make_estruct_ok();
 }
 
-void Image::placeRect(int x, int y, const VImage &src, const Rect &rect){
-    if(isBadCoord(x, y, m_width, m_height)) throw logic_error("Invalid position.");
-    if(x + rect.width > m_width || y + rect.height > m_height) throw logic_error("Out of range.");
+estruct Image::placeRect(int x, int y, const VImage &src, const Rect &rect) noexcept{
+    if(isBadCoord(x, y, m_width, m_height)) return make_estruct(ErrCode::InvalidNumber, "Coords should be in range of image size.");
+    if(x + rect.width > m_width || y + rect.height > m_height) return make_estruct(ErrCode::OutOfBound, "Image given size is too large.");
     
     for(int vy = 0; vy < rect.height; vy++){
         for(int vx = 0; vx < rect.width; vx++){
             int pos = ((y + vy) * m_width) + (x + vx);
-            m_data[pos] = src.access(rect.x + vx, rect.y + vy);
+            auto [err, rgb] = src.access(rect.x + vx, rect.y + vy);  //经过上方的坐标检查后，此处应该不会发生错误，因此不考虑错误检查
+            m_data[pos] = rgb;
         }
     }
+
+    return make_estruct_ok();
 }
 
-RGBA* Image::accessAll(){
-    return m_data;
+ERGBAPtr Image::accessAll() noexcept{
+    return make_evalue_ok(m_data);
 }
 
-void Image::createBuffer(int width, int height){
-    if(width < 0 || height < 0) throw logic_error("Invalid size.");
+estruct Image::createBuffer(int width, int height) noexcept{
+    if(width < 0 || height < 0){
+        return make_estruct(ErrCode::InvalidNumber, "Invalid size.");
+    }
+
     m_data = (RGBA*) calloc(width * height, sizeof(RGBA));
-    if(m_data == NULL) throw std::runtime_error("Out of memory.");
+    if(m_data == NULL){
+        return make_estruct(ErrCode::OutOfMem, "No memory.");
+    }
+
+    return make_estruct_ok();
 }
 
 PACKER_END

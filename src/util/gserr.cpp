@@ -14,6 +14,14 @@ Err_Struct::Err_Struct(ErrCode code, const char *what, const char *file, unsigne
     this -> row = row;
 }
 
+Err_Struct::Err_Struct(const Err_Struct &oth)
+{
+    this -> code = oth.code;
+    this -> what = oth.what;
+    this -> file = oth.file;
+    this -> row = oth.row;
+}
+
 Err_Struct::operator string() const{
     stringstream stream;
     stream 
@@ -23,6 +31,10 @@ Err_Struct::operator string() const{
         << ", row_number: " << row;
 
     return stream.str();
+}
+
+Err_Struct::operator bool() const{
+    return code != ErrCode::OK;
 }
 
 //=========== Other functions ==============
