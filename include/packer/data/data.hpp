@@ -5,7 +5,7 @@
 #include <string>
 #include <memory>
 #include "packer/packer.hpp"
-#include "packer/util/alias.hpp"
+#include "packer/raii/alias.hpp"
 PACKER_BEGIN
 class VImage;
 

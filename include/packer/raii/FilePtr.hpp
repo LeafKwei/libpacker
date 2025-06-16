@@ -15,6 +15,7 @@ public:
     ~FilePtr();
 
     FILE* use();
+    const FILE* cuse();
 
     operator bool();
     FilePtr& operator=(FilePtr &rhs) =delete;

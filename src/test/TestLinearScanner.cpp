@@ -1,5 +1,5 @@
 #include <iostream>
-#include "packer/impl/LinearScanner.hpp"
+#include "packer/impl/DefaultScanner.hpp"
 
 int main(void){
     

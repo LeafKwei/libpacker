@@ -1,52 +1,50 @@
 #include <stdexcept>
 #include <cassert>
-#include "packer/raii/CharBuffer.hpp"
+#include "packer/raii/RgbaBuffer.hpp"
 
 using std::logic_error;
 using std::runtime_error;
 PACKER_BEGIN
 
-CharBuffer::CharBuffer() : m_buffer(NULL), m_size(0){}
+RgbaBuffer::RgbaBuffer() : m_buffer(NULL), m_size(0){}
 
-CharBuffer::CharBuffer(int size){
-    m_buffer = (char*) malloc(size * sizeof(char));
+RgbaBuffer::RgbaBuffer(int size) : m_buffer(NULL){
+    m_buffer = (RGBA*) calloc(size, sizeof(RGBA));
     if(m_buffer == NULL) throw runtime_error("Failed to malloc memory.");
     m_size = size;
 }
 
-CharBuffer::CharBuffer(CharBuffer &&oth) noexcept 
-    : m_buffer(oth.m_buffer)
+RgbaBuffer::RgbaBuffer(RgbaBuffer &&oth) noexcept 
+    : m_buffer(oth.m_buffer) 
     , m_size(oth.m_size)
 {
     oth.m_buffer = NULL;
 }
 
-CharBuffer::~CharBuffer(){
+RgbaBuffer::~RgbaBuffer(){
     free(m_buffer);
-    m_buffer = NULL;
 }
 
-char* CharBuffer::use(){
+RGBA* RgbaBuffer::use(){
     return m_buffer;
 }
 
-const char* CharBuffer::cuse(){
+const RGBA* RgbaBuffer::cuse() const{
     return m_buffer;
 }
 
-int CharBuffer::size(){
+int RgbaBuffer::size(){
     return m_size;
 }
 
-CharBuffer::operator bool(){
+RgbaBuffer::operator bool(){
     return m_buffer != NULL;
 }
 
-CharBuffer& CharBuffer::operator=(CharBuffer &&rhs) noexcept{
+RgbaBuffer& RgbaBuffer::operator=(RgbaBuffer &&rhs) noexcept{
     assert(this != std::addressof(rhs));
     free(m_buffer);
     m_buffer = rhs.m_buffer;
-    m_size = rhs.m_size;
     rhs.m_buffer = NULL;
     return *this;
 }

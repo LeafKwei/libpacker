@@ -3,12 +3,14 @@
 #include "packer/impl/Image.hpp"
 #include "packer/impl/ImageReader.hpp"
 #include "packer/impl/ImageWriter.hpp"
+
 using packer::RGBA;
 using packer::Rect;
 using packer::Image;
 using packer::VImage;
 using packer::ImageReader;
 using packer::ImageWriter;
+using packer::VImagePtr;
 
 class MyReader : public ImageReader{
 protected:
@@ -70,17 +72,16 @@ private:
 int main(void){
     MyReader reader;
     MyWriter writer;
-    VImage *img1 = reader.read();
+    VImagePtr imgptr = reader.read();
     Image img2(50, 50);
-    writer.write(*img1);
+    writer.write(*(imgptr.get()));
     packer::Rect rect;
     rect.x = 0;
     rect.y = 0;
     rect.width = 10;
     rect.height = 10;
-    img2.placeRect(20, 20, *img1, rect);
+    img2.placeRect(20, 20, *(imgptr.get()), rect);
     writer.write(img2);
 
-    delete img1;
     return 0;
 }

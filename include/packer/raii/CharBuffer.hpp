@@ -1,5 +1,5 @@
-#ifndef PACKER_RCHARBUFFER_HPP
-#define PACKER_RCHARBUFFER_HPP
+#ifndef PACKER_CHARBUFFER_HPP
+#define PACKER_CHARBUFFER_HPP
 
 #include "packer/packer.hpp"
 PACKER_BEGIN
@@ -14,6 +14,7 @@ public:
     ~CharBuffer();
     
     char* use();
+    const char* cuse();
     int size();
 
     operator bool();

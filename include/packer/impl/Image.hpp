@@ -3,6 +3,7 @@
 
 #include "packer/packer.hpp"
 #include "packer/core/VImage.hpp"
+#include "packer/raii/RgbaBuffer.hpp"
 PACKER_BEGIN
 
 /**
@@ -23,7 +24,7 @@ public:
 private:
     int m_width;
     int m_height;
-    RGBA *m_data;
+    RgbaBuffer m_data;
 
     void createBuffer(int width, int height);
 };

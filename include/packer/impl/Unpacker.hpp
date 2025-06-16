@@ -5,7 +5,6 @@
 #include <map>
 #include <string>
 #include "packer/core/VUnpakcer.hpp"
-#include "packer/util/alias.hpp"
 PACKER_BEGIN
 
 /**

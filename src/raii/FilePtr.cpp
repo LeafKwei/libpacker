@@ -28,12 +28,17 @@ FILE* FilePtr::use(){
     return m_ptr;
 }
 
+const FILE* FilePtr::cuse(){
+    return m_ptr;
+}
+
 FilePtr::operator bool(){
-    return m_ptr != NULL ? true : false;
+    return m_ptr != NULL;
 }
 
 FilePtr& FilePtr::operator=(FilePtr &&rhs) noexcept{
     assert(this != std::addressof(rhs));
+    fclose(m_ptr);
     m_ptr = rhs.m_ptr;
     rhs.m_ptr = NULL;
     return *this;

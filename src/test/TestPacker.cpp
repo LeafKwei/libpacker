@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
+#include <iostream>
 #include "packer/impl/Packer.hpp"
 #include "packer/impl/Unpacker.hpp"
 #include "packer/impl/ImageReader.hpp"
@@ -30,6 +31,10 @@ public:
         }
 
         return tmp;
+    }
+
+    ~NoSrcImageReader(){
+        //std::cout << "~NoSrcImageReader" << std::endl;
     }
 
 protected:
@@ -80,6 +85,10 @@ public:
         if(pos != string::npos){
             ID = tmp.substr(0, pos);
         }
+    }
+
+    ~FileImageReader(){
+        //std::cout << "~FileImageReader" << std::endl;
     }
 
     std::string id() override{
@@ -136,7 +145,7 @@ protected:
         this -> height = height;
     }
 
-    void  writeRGB(int x, int y, const RGBA &rgba) override{
+    void writeRGB(int x, int y, const RGBA &rgba) override{
         if(y != 0 && x == 0) fputc('\n', file);
         int ch = (rgba.a == 0) ? '#' : rgba.r;
         fputc(ch, file);
@@ -173,10 +182,9 @@ int main(int argc, char *argv[]){
         std::vector<string> idvec = unpacker.idList();
 
         for(auto &id : idvec){
-            VImage *img = unpacker.getImageById(id);
+            VImagePtr  imgptr(unpacker.getImageById(id));
             FileImageWriter fwriter((id + ".txt").c_str());
-            fwriter.write(*img);
-            delete img;
+            fwriter.write(*(imgptr.get()));
         }
     }
 }

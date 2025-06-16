@@ -5,7 +5,7 @@
 #include "packer/core/VImage.hpp"
 #include "packer/packer.hpp"
 #include "packer/data/data.hpp"
-#include "packer/util/alias.hpp"
+#include "packer/raii/alias.hpp"
 PACKER_BEGIN
 
 /**

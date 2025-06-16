@@ -3,7 +3,7 @@
 
 #include <vector>
 #include "packer/core/VPacker.hpp"
-#include "packer/util/alias.hpp"
+#include "packer/raii/alias.hpp"
 PACKER_BEGIN
 
 /**
