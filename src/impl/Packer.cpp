@@ -20,20 +20,12 @@ Packer::Packer(int scale, int scaledWidth) : m_state(State::PK_EMPTY), m_image(n
 }
 
 Packer::~Packer(){
-    delete m_image;
-
-    for(auto &rc : m_records){
-        delete rc.imgptr;
-    }
-
-    for(auto reader : m_readers){
-        delete reader;
-    }
+    
 }
 
 void Packer::addImageReader(VImageReader *imgReader){
     if(imgReader == nullptr) throw logic_error("Image reader can not be nullptr.");
-    m_readers.push_back(imgReader);
+    m_readers.push_back(VImageReaderPtr(imgReader));
 }
 
 void Packer::pack(){
@@ -61,7 +53,7 @@ void Packer::save(VImageWriter &imgWriter, VProfileWriter &prfWriter){
             prfWriter.write(rc.profile);
         }
 
-        imgWriter.write(*m_image);
+        imgWriter.write(*(m_image.get()));
     }
     catch(logic_error &err){
         throw logic_error(string("Failed: ") + err.what());
@@ -85,7 +77,7 @@ void Packer::scanImage(){
 
     for(auto &rc : m_records){
         Rect tmp;
-        scanner.scan(*(rc.imgptr), tmp);
+        scanner.scan(*(rc.imgptr.get()), tmp);
         rc.profile.srcRange = tmp;
     }
 }
@@ -117,8 +109,8 @@ void Packer::layImage(){
 }
 
 void Packer::packImage(){
-    VImage *image = new Image(m_packedWidth, m_packedHeight);
-    if(image == nullptr) throw runtime_error("Out of memory.");
+    VImagePtr imgptr(new Image(m_packedWidth, m_packedHeight));
+    if(imgptr == nullptr) throw runtime_error("Out of memory.");
 
     for(auto &rc : m_records){
         Rect &src = rc.profile.srcRange;
@@ -129,10 +121,10 @@ void Packer::packImage(){
             continue;
         }
 
-        image -> placeRect(dst.x, dst.y, *(rc.imgptr), src);
+        imgptr -> placeRect(dst.x, dst.y, *(rc.imgptr.get()), src);
     }
 
-    m_image = image;
+    m_image = imgptr;
 }
 
 PACKER_END

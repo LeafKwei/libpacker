@@ -20,14 +20,12 @@ Unpacker::Unpacker(VImageReader *imgReader, VProfileReader *prfReader) :
     m_imgReader(nullptr), m_prfReader(nullptr) 
 {
     if(imgReader == nullptr || prfReader == nullptr) throw logic_error("Reader should not be nullptr.");
-    m_imgReader = imgReader;
-    m_prfReader = prfReader;
+    m_imgReader = VImageReaderPtr(imgReader);
+    m_prfReader = VProfileReaderPtr(prfReader);
 }
 
 Unpacker::~Unpacker(){
-    delete m_image;
-    delete m_imgReader;
-    delete m_prfReader;
+    
 }
 
 void Unpacker::unpack(){
@@ -79,7 +77,7 @@ void Unpacker::readProfiles(){
 
     while((ind = m_prfReader -> read(prf)) != Indicator::RD_EOF){
         if(ind == Indicator::RD_INCOMPLETE){
-            cerr << "Incomplete profile will be ignored." << endl;
+            cerr << "Incomplete profile will be ignored(It may be an blank line)." << endl;
             continue;
         }
 

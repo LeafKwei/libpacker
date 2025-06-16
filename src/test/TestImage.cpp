@@ -21,13 +21,8 @@ protected:
             height = 60;
     }
 
-    void readRGB(RGBA *buffer) override{
-        for(int y = 0; y < 60; y++){
-            for(int x = 0; x < 30; x++){
-                RGBA &rgb = buffer[y * 30 + x];
-                rgb.a = 255;
-            }
-        }
+    inline void readRGB(int x, int y, RGBA &rgba) override{
+        rgba.a = 255;
     }
 
     void finalize() override{
@@ -49,17 +44,17 @@ protected:
         std::cout << "image size: " << width << ", " << height << std::endl;;
     }
 
-    void writeRGB(const RGBA *buffer) override{
-        for(int y = 0; y < height; y++){
-            for(int x = 0; x < width; x++){
-                if(buffer[y * width + x].a == 255){
-                    std::cout << "*";
-                }
-                else{
-                    std::cout << "+";
-                }
-            }
+    inline void writeRGB(int x, int y, const RGBA &rgba) override{
+        /* 在打印新行前打印换行符 */
+        if(y != 0 && x == 0){
             std::cout << std::endl;
+        }
+
+        if(rgba.a == 255){
+            std::cout << "*";
+        }
+        else{
+             std::cout << "+";
         }
     }
 

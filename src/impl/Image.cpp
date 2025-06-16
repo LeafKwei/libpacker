@@ -17,11 +17,11 @@ Image::~Image(){
     free(m_data);
 }
 
-int Image::width() const{
+int Image::width() const noexcept{
     return m_width;
 }
 
-int Image::height() const{
+int Image::height() const noexcept{
     return m_height;
 }
 

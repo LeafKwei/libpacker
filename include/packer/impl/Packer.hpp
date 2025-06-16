@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "packer/core/VPacker.hpp"
+#include "packer/util/alias.hpp"
 PACKER_BEGIN
 
 /**
@@ -26,8 +27,8 @@ private:
     int m_scaledWidth;
     int m_packedWidth;
     int m_packedHeight;
-    VImage *m_image;
-    std::vector<VImageReader*> m_readers;
+    VImagePtr m_image;
+    std::vector<VImageReaderPtr> m_readers;
     std::vector<Record> m_records;
 
     void readImage();

@@ -13,8 +13,8 @@ class Image : public VImage{
 public:
     Image(int width, int height);
     ~Image();
-    int width() const override;
-    int height() const override;
+    int width() const noexcept override;
+    int height() const noexcept override;
     RGBA access(int x, int y) const override;
     void place(int x, int y, const RGBA &rgb) override;
     void placeRect(int x, int y, const VImage &src, const Rect &rect) override;

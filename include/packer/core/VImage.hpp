@@ -11,8 +11,8 @@ PACKER_BEGIN
  */
 class VImage{
 public:
-    virtual int width() const =0;
-    virtual int height() const =0;
+    virtual int width() const noexcept =0;
+    virtual int height() const noexcept =0;
     virtual RGBA access(int x, int y) const =0;          //获取x,y坐标位置的像素
     virtual RGBA* accessAll() =0;                              //获取所有的像素数据
     virtual void place(int x, int y, const RGBA &rgb) =0;  //将x,y坐标位置的像素设置为指定像素

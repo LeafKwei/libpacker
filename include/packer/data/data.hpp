@@ -5,6 +5,7 @@
 #include <string>
 #include <memory>
 #include "packer/packer.hpp"
+#include "packer/util/alias.hpp"
 PACKER_BEGIN
 class VImage;
 
@@ -53,7 +54,7 @@ struct Profile{
 
 struct Record{
     Profile profile;
-    VImage *imgptr;
+    VImagePtr imgptr;
     Record();
     operator bool();
 };

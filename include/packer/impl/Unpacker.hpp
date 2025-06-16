@@ -5,6 +5,7 @@
 #include <map>
 #include <string>
 #include "packer/core/VUnpakcer.hpp"
+#include "packer/util/alias.hpp"
 PACKER_BEGIN
 
 /**
@@ -21,10 +22,10 @@ public:
 
 private:
     State m_state;
-    VImage *m_image;
+    VImagePtr m_image;
     std::map<std::string, Profile> m_profiles;
-    VImageReader *m_imgReader;
-    VProfileReader *m_prfReader;
+    VImageReaderPtr m_imgReader;
+    VProfileReaderPtr m_prfReader;
 
     void readProfiles();
     VImage *dumpImage(const Profile &prf);

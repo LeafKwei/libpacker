@@ -5,6 +5,7 @@
 #include "packer/core/VImage.hpp"
 #include "packer/packer.hpp"
 #include "packer/data/data.hpp"
+#include "packer/util/alias.hpp"
 PACKER_BEGIN
 
 /**
@@ -18,7 +19,7 @@ PACKER_BEGIN
  */
 class VImageReader{
 public:
-    virtual VImage* read() =0;  //读取一个VImage对象
+    virtual VImagePtr read() =0;  //读取一个VImage对象
     virtual std::string id() =0;    //获取该VImage对象的id
     virtual ~VImageReader();
 };

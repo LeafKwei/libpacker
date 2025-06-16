@@ -2,23 +2,30 @@
 #include "packer/impl/Image.hpp"
 #include "packer/impl/ImageReader.hpp"
 
+using std::exception;
 using std::logic_error;
 using std::runtime_error;
 using std::string;
 PACKER_BEGIN
 
-VImage* ImageReader::read(){
+VImagePtr ImageReader::read(){
     int width, height;
+
     initialize(width, height);
     if(width <=0 || height <= 0) throw logic_error("Size must be a positive number.");
 
-    VImage *img = new Image(width, height);
-    if(img == nullptr) throw runtime_error("Out of memery.");
+    VImagePtr imgptr(new Image(width, height));
+    if(imgptr == nullptr) throw runtime_error("Out of memery.");
 
-    readAllRGB(img->accessAll());
+    auto data = imgptr -> accessAll();
+    for(int y = 0; y < height; y++){
+        for(int x = 0; x < width; x++){
+            readRGB(x, y, data[y * width + x]);
+        }
+    }
+
     finalize();
-
-    return img;
+    return imgptr;
 }
 
 PACKER_END

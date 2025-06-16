@@ -40,21 +40,16 @@ protected:
         height = this -> height;
     }
 
-    void readAllRGB(RGBA *buffer) override{
-        for(int y = 0; y < height; y++){
-            for(int x = 0; x < width; x++){
-                RGBA &rgba = buffer[y * width + x];
-                if((y < 5 || y > height - 5) || (x < 5 || x > width - 5)){
-                    rgba.a = 0;
-                    continue;;
-                }
-
-                rgba.a = 255;
-                rgba.r = buf[index];
-                rgba.g = buf[index];
-                rgba.b =  buf[index];
-            }
+    inline void readRGB(int x, int y, RGBA &rgba) override{
+        if((y < 5 || y > height - 5) || (x < 5 || x > width - 5)){
+            rgba.a = 0;
+            return;
         }
+
+        rgba.a = 255;
+        rgba.r = buf[index];
+        rgba.g = buf[index];
+        rgba.b =  buf[index];
     }
 
     void finalize() override{
@@ -107,21 +102,16 @@ protected:
         free(buffer);
     }
 
-    void readAllRGB(RGBA *buffer) override{
-        for(int y = 0; y < height; y++){
-            for(int x = 0; x < width; x++){
-                RGBA &rgba = buffer[y * width + x];
-                int ch = fgetc(file);
-                if(ch == '\n') break;
-                if(ch == '#'){
-                    rgba.a = 0;
-                    continue;
-                }
-
-                rgba.a = 255;
-                rgba.r = rgba.g = rgba.b = ch;
-            }
+    inline void readRGB(int x, int y, RGBA &rgba) override{
+        int ch = fgetc(file);
+        if(ch == '\n') return;
+        if(ch == '#'){
+            rgba.a = 0;
+            return;
         }
+
+        rgba.a = 255;
+        rgba.r = rgba.g = rgba.b = ch;
     }
 
     void finalize() override{
@@ -140,21 +130,16 @@ public:
     FileImageWriter(const char* path) : path(path){}
 
 protected:
-    virtual void  initialize(int width, int height) override{
+    void  initialize(int width, int height) override{
         file = fopen(path.c_str(), "w");
         this -> width = width;
         this -> height = height;
     }
 
-    virtual void  writeAllRGB(const RGBA *buffer) override{
-        for(int y = 0; y < height; y++){
-            for(int x =0 ; x < width; x++){
-                const RGBA &rgba = buffer[y * width + x];
-                int ch = (rgba.a == 0) ? '#' : rgba.r;
-                fputc(ch, file);
-            }
-            fputc('\n', file);
-        }
+    void  writeRGB(int x, int y, const RGBA &rgba) override{
+        if(y != 0 && x == 0) fputc('\n', file);
+        int ch = (rgba.a == 0) ? '#' : rgba.r;
+        fputc(ch, file);
     }
 
     virtual void finalize() override{
