@@ -100,7 +100,7 @@ void Packer::layImage(){
         Rect &dst = rc.profile.dstRange;
 
         if(!src) continue;
-        tmp = layouter.laydown(src.width, src.height);
+        tmp = layouter.laydown({src.width, src.height});
         dst = tmp;
     }
 

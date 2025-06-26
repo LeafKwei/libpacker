@@ -20,7 +20,7 @@ PACKER_BEGIN
 class ScaledLayouter : public VLayouter{
 public:
     ScaledLayouter(int scale, int layouterWidth, int layouterHeight);
-    Rect laydown(int imageWidth, int imageHeight) override;
+    Rect laydown(ImageSize size) override;
     int packedWidth() const override;
     int packedHeight() const override;
 

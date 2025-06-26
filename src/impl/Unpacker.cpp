@@ -44,12 +44,12 @@ void Unpacker::unpack(){
     }
 }
 
-VImage* Unpacker::getImageById(const std::string &id){
+VImagePtr Unpacker::getImageById(const std::string &id){
     if(m_state  != State::UPK_UNPACKED) throw logic_error("Unpack first.");
     if(m_profiles.find(id) == m_profiles.cend()) return nullptr;
 
     try{
-        VImage *img = dumpImage(m_profiles.at(id));
+        VImagePtr img = dumpImage(m_profiles.at(id));
         return img;
     }
     catch(logic_error &err){
@@ -77,7 +77,7 @@ void Unpacker::readProfiles(){
 
     while((ind = m_prfReader -> read(prf)) != Indicator::RD_EOF){
         if(ind == Indicator::RD_INCOMPLETE){
-            cerr << "Incomplete profile will be ignored(It may be an blank line)." << endl;
+            cerr << "Incomplete profile will be ignored(It may be a blank line)." << endl;
             continue;
         }
 
@@ -85,8 +85,8 @@ void Unpacker::readProfiles(){
     }
 }
 
-VImage* Unpacker::dumpImage(const Profile &prf){
-    VImage *img = new Image(prf.srcRange.width, prf.srcRange.height);
+VImagePtr Unpacker::dumpImage(const Profile &prf){
+    VImagePtr img(new Image(prf.srcRange.width, prf.srcRange.height));
     if(img == nullptr) throw runtime_error("Out of memory.");
     
     Rect realRange;

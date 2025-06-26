@@ -16,7 +16,10 @@ ScaledLayouter::ScaledLayouter(int scale, int layouterWidth, int layouterHeight)
     m_note.resize(m_layouterWidth * m_layouterHeight);
 }
 
-Rect ScaledLayouter::laydown(int imageWidth, int imageHeight){
+Rect ScaledLayouter::laydown(ImageSize size){
+    int imageWidth = toWidth(size);
+    int imageHeight = toHeight(size);
+
     if(imageWidth <= 0 ||  imageHeight <= 0) throw logic_error("Width or height must be a positive number.");
 
     Rect result;

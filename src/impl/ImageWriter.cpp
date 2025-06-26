@@ -2,7 +2,7 @@
 PACKER_BEGIN
 
 void ImageWriter::write(VImage &img){
-    initialize(img.width(), img.height());
+    openImage({img.width(), img.height()});
     
     auto data = img.accessAll();
     auto width = img.width();
@@ -14,7 +14,7 @@ void ImageWriter::write(VImage &img){
         }
     }
 
-    finalize();
+    closeImage();
 }
 
 PACKER_END

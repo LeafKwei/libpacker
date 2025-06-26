@@ -65,7 +65,7 @@ void mypng::write(int x, int y, int pix, PNGHandle *handle); //向指定位置�
 void mypng::save(const char *name, PNGHandle *handle); //保存png文件
 ```
 
-要实现我们的ImageReader，我们首先需要使用一个类继承ImageReader，并实现其中的initialize、readAllRGB、finalize函数，它们的作用分别是打开图片并初始化、拷贝像素、关闭图片，同时，还需要实现VImageReader中的id函数，该函数需要返回一个string，用于标识该图片，以便后续解包时作为图片的索引。
+要实现我们的ImageReader，我们首先需要使用一个类继承ImageReader，并实现其中的openImage、readRGB、closeImage函数，它们的作用分别是打开图片并初始化、拷贝像素、关闭图片，同时，还需要实现VImageReader中的id函数，该函数需要返回一个string，用于标识该图片，以便后续解包时作为图片的索引。
 
 ```C++
 #include "packer/impl/ImageReader.hpp"
@@ -80,31 +80,24 @@ public:
     }
     
 protected:
-    void initialize(int &width, int &height) override{
+    //ImageSize是std::tuple的包装，索引0对应width，1对应height
+    ImageSize openImage() override{
         m_handle = mypng::open(m_name.cstr());
-        width = mypng::width(m_handle);
-        height = mypng::height(m_handle);
+        //makeImageSize是对std::tuple<int,int>(widht, height)的包装
+        return makeImageSize(mypng::width(m_handle), mypng::height(m_handle));
     }
     
-    void readAllRGB(RGBA *buffer) override{
-        int width = mypng::width(m_handle);
-        int height = mypng::height(m_handle);
+    inline void readRGB(int x, int y, RGBA &rgba) noexcept override{
+    	int pix = mypng::read(x, y, m_handle);
         
-        for(int y = 0; y < height; y++){
-            for(int x = 0; x < width; x++){
-                int pix = mypng::read(x, y, m_handle);
-                
-                /* 分别获取每个分量并赋值给RGBA成员 */
-                RGBA &rgb = buffer[y * width + x];
-                rgb.a = pix & 0xFF;
-                rgb.b = (pix >> 8) & 0xFF;
-                rgb.g = (pix >> 16) & 0xFF;
-                rgb.r = (pix >> 24) & 0xFF;
-            }
-        }
+        /* 分别获取每个分量并赋值给RGBA成员 */
+        rgba.a = pix & 0xFF;
+		rgba.b = (pix >> 8) & 0xFF;
+		rgba.g = (pix >> 16) & 0xFF;
+		rgba.r = (pix >> 24) & 0xFF;
     }
     
-    void finalize() override{
+    void closeImage() override{
         mypng::close(m_hanlde);
     }
     
@@ -114,13 +107,13 @@ private:
 };
 ```
 
-当用户调用ImageReader的read函数时，ImageReader会首先调用initialize函数，以便让我们的MyImageReader首先打开和初始化图片，我们需要将图片的宽高通过width和height引用传递给基类，随后基类会创建一个与我们给定的宽高一致的空白VImage对象，并将该对象的RGBA缓冲区通过readAllRGB函数传递给我们的MyImageReader，而我们就需要在readAllRGB函数内实现将png图片的像素拷贝到RGBA缓冲区的功能。最后，基类调用finalize函数执行清理操作。
+当用户调用ImageReader的read函数时，ImageReader会首先调用openImage函数，以便让我们的MyImageReader首先打开和初始化图片，我们需要将图片的宽高通过ImageSize返回给基类，随后基类会创建一个与我们给定的宽高一致的空白VImage对象，并将该对象的RGBA缓冲区通过readRGB函数传递给我们的MyImageReader，而我们就需要在readRGB函数内实现将png图片的像素拷贝到RGBA缓冲区的功能。最后，基类调用closeImage函数执行清理操作。
 
 
 
 ## 5.2.实现ImageWriter
 
-ImageWriter的功能与ImageReader基本对称，我们首先需要使用一个类继承ImageWriter，然后实现initialize、writeAllRGB、finalize函数：
+ImageWriter的功能与ImageReader基本对称，我们首先需要使用一个类继承ImageWriter，然后实现openImage、writeRGB、closeImage函数：
 
 ```C++
 #include "packer/impl/ImageWriter.hpp"
@@ -131,32 +124,26 @@ public:
     MyImageWriter(const char *name) : m_name(name){}
 
 protected:
-    void initialize(int width, int height) override{
-        m_handle = mypng::create(width, height);
+    //toWidth和toHeight是对std::get<0>和std::get<1>的包装
+    void openImage(ImageSize size) override{
+        m_handle = mypng::create(toWidth(size), toHeight(size));
     }
     
-    void writeAllRGB(RGBA *buffer) override{
-        int width = mypng::width(m_handle);
-        int height = mypng::height(m_handle);
+    inline void writeRGB(int x, int y, const RGBA &rgba) noexcept override{
+        int pix = 0;
+        RGBA &rgb = buffer[y * width + x];
+        pix |= (rgb.r & 0xFF);
+        pix << 8;
+        pix |= (rgb.g & 0xFF);
+        pix << 8;
+        pix |= (rgb.b & 0xFF);
+        pix << 8;
+        pix |= (rgb.a & 0xFF);
         
-        for(int y = 0; y < height; y++){
-            for(int x = 0; x < width; x++){
-                int pix = 0;
-                RGBA &rgb = buffer[y * width + x];
-                pix |= (rgb.r & 0xFF);
-                pix << 8;
-                pix |= (rgb.g & 0xFF);
-                pix << 8;
-                pix |= (rgb.b & 0xFF);
-                pix << 8;
-                pix |= (rgb.a & 0xFF);
-                
-                mypng::write(x, y, pix, m_handle);
-            }
-        }
+        mypng::write(x, y, pix, m_handle);
     }
     
-    void finalize() override{
+    void closeImage() override{
         mypng::save(m_name.cstr(), m_handle);
         mypng::close(m_handle);
     }
@@ -167,7 +154,7 @@ private:
 };
 ```
 
-基类会把将要写入的图片的宽高通过initialize函数传递给MyImageWriter，我们可以借此创建对应宽高的图片，然后，在writeAllRGB函数中将像素数据拷贝到我们的图片中，最后在finalize函数中将图片保存到文件。
+基类会把将要写入的图片的宽高通过openImage函数传递给MyImageWriter，我们可以借此创建对应宽高的图片，然后，在writeRGB函数中将像素数据拷贝到我们的图片中，最后在closeImage函数中将图片保存到文件。
 
  
 
@@ -214,11 +201,11 @@ void doUnpack(){
 	//Unpacker析构时会负责删除reader，所以直接从堆上分配即可
    	Unpacker unpacker(new MyImageReader("total.png"), new DefaultProfileReader("total.prf"));
    	unpacker.unpack(); //解包
-    VImage *img = unpacker.getImageById("a.png"); //使用前文中的id来获取图片，用户需要负责删除VImage对象
+    //使用前文中的id来获取图片，VImagePtr是std::shared_ptr<VImage>的包装
+    VImagePtr = unpacker.getImageById("a.png");
     
     /* 使用VImage对象 */
-    ...
-    delete img;
+    useVImage(VImagePtr.get());
 }
 ```
 

@@ -38,14 +38,13 @@ public:
     }
 
 protected:
-    void initialize(int &width, int &height) override{
+    ImageSize openImage() override{
         this -> width = rand() % 26 + 15;
         this -> height = rand() % 26 + 15;
-        width = this -> width;
-        height = this -> height;
+        return makeImageSize(width, height);
     }
 
-    inline void readRGB(int x, int y, RGBA &rgba) override{
+    inline void readRGB(int x, int y, RGBA &rgba) noexcept override{
         if((y < 5 || y > height - 5) || (x < 5 || x > width - 5)){
             rgba.a = 0;
             return;
@@ -57,7 +56,7 @@ protected:
         rgba.b =  buf[index];
     }
 
-    void finalize() override{
+    void closeImage() override{
         index = (index + 1) % 3;
     }
 
@@ -96,7 +95,7 @@ public:
     }
 
 protected:
-    void initialize(int &width, int &height) override{
+    ImageSize openImage() override{
         fseek(file, 0, SEEK_END);
         long size = ftell(file);
         fseek(file, 0, SEEK_SET);
@@ -109,9 +108,11 @@ protected:
         height = this -> height;
         fseek(file, 0, SEEK_SET);
         free(buffer);
+
+        return makeImageSize(width, height);
     }
 
-    inline void readRGB(int x, int y, RGBA &rgba) override{
+    inline void readRGB(int x, int y, RGBA &rgba) noexcept override{
         int ch = fgetc(file);
         if(ch == '\n') return;
         if(ch == '#'){
@@ -123,7 +124,7 @@ protected:
         rgba.r = rgba.g = rgba.b = ch;
     }
 
-    void finalize() override{
+    void closeImage() override{
         fclose(file);
     }
 
@@ -139,19 +140,19 @@ public:
     FileImageWriter(const char* path) : path(path){}
 
 protected:
-    void  initialize(int width, int height) override{
+    void  openImage(ImageSize size) override{
         file = fopen(path.c_str(), "w");
-        this -> width = width;
-        this -> height = height;
+        this -> width = toWidth(size);
+        this -> height = toHeight(size);
     }
 
-    void writeRGB(int x, int y, const RGBA &rgba) override{
+    inline void writeRGB(int x, int y, const RGBA &rgba) noexcept override{
         if(y != 0 && x == 0) fputc('\n', file);
         int ch = (rgba.a == 0) ? '#' : rgba.r;
         fputc(ch, file);
     }
 
-    virtual void finalize() override{
+    virtual void closeImage() override{
         fclose(file);
     }
 

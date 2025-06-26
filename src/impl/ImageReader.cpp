@@ -9,9 +9,10 @@ using std::string;
 PACKER_BEGIN
 
 VImagePtr ImageReader::read(){
-    int width, height;
+    ImageSize size =  openImage();
+    int width = toWidth(size);
+    int height = toHeight(size);
 
-    initialize(width, height);
     if(width <=0 || height <= 0) throw logic_error("Size must be a positive number.");
 
     VImagePtr imgptr(new Image(width, height));
@@ -24,7 +25,7 @@ VImagePtr ImageReader::read(){
         }
     }
 
-    finalize();
+    closeImage();
     return imgptr;
 }
 

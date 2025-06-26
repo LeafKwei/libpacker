@@ -15,9 +15,9 @@ public:
     VImagePtr read() override;
 
 protected:
-    virtual void initialize(int &width, int &height) =0;              //进行像素拷贝前的初始化，例如打开图片
-    virtual inline void readRGB(int x, int y, RGBA &rgba) =0;   //将原图片中的指定位置的像素值保存RGBA结构体中               
-    virtual void finalize() =0;                                                     //完成像素拷贝后的清理操作，例如关闭图片
+    virtual ImageSize openImage() =0;              //进行像素拷贝前的初始化，例如打开图片
+    virtual inline void readRGB(int x, int y, RGBA &rgba) noexcept =0;        //将原图片中的指定位置的像素值保存RGBA结构体中               
+    virtual void closeImage() =0;                                                     //完成像素拷贝后的清理操作，例如关闭图片
 };
 
 PACKER_END

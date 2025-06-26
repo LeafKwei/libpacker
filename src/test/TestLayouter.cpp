@@ -14,15 +14,15 @@ void printLayouter(const packer::VLayouter &layouter){
 
 int main(void){
     packer::ScaledLayouter layouter(16, 2, 1);
-    Rect r1 = layouter.laydown(30, 40);
+    Rect r1 = layouter.laydown(makeImageSize(40, 50));
     printRect(r1);
-    Rect r2 = layouter.laydown(30, 50);
+    Rect r2 = layouter.laydown(makeImageSize(50, 40));
     printRect(r2);
-    Rect r3 = layouter.laydown(32, 60);
+    Rect r3 = layouter.laydown(makeImageSize(100, 300));
     printRect(r3);
-    Rect r4 = layouter.laydown(32, 900);
+    Rect r4 = layouter.laydown(makeImageSize(300, 100));
     printRect(r4);
-    Rect r5 = layouter.laydown(1, 1);
+    Rect r5 = layouter.laydown(makeImageSize(1,1));
     printRect(r5);
     printLayouter(layouter);
 }

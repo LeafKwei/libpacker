@@ -15,7 +15,7 @@ class Unpacker : public VUnpacker{
 public:
     Unpacker(VImageReader *imgReader, VProfileReader *prfReader);
     void unpack() override;
-    VImage* getImageById(const std::string &id) override;
+    VImagePtr getImageById(const std::string &id) override;
     std::vector<std::string> idList() override;
     ~Unpacker();
 
@@ -27,7 +27,7 @@ private:
     VProfileReaderPtr m_prfReader;
 
     void readProfiles();
-    VImage *dumpImage(const Profile &prf);
+    VImagePtr dumpImage(const Profile &prf);
 };
 
 PACKER_END

@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <string>
 #include <memory>
+#include <tuple>
 #include "packer/packer.hpp"
 #include "packer/raii/alias.hpp"
 PACKER_BEGIN
@@ -60,6 +61,11 @@ struct Record{
 };
 
 typedef RGBA_Struct RGBA;
+using ImageSize = std::tuple<int, int>;
+
+#define toWidth(tuple) (std::get<0>(tuple))
+#define toHeight(tuple) (std::get<1>(tuple))
+#define makeImageSize(width, height) (std::tuple<int,int>(width, height))
 
 PACKER_END
 #endif

@@ -11,9 +11,9 @@ PACKER_BEGIN
  */
 class VLayouter{
 public:
-    virtual Rect laydown(int imageWidth, int imageHeight) =0;  //计算指定宽高的图片在最终合并得到的图片中的位置
-    virtual int packedWidth() const =0;   //获取最终合并得到的图片所需的宽度
-    virtual int packedHeight() const =0;  //获取最终合并得到的图片所需的高度
+    virtual Rect laydown(ImageSize size) =0;  //计算指定宽高的图片在最终合并得到的图片中的位置
+    virtual int packedWidth() const =0;          //获取最终合并得到的图片所需的宽度
+    virtual int packedHeight() const =0;         //获取最终合并得到的图片所需的高度
     virtual ~VLayouter();
 };
 
